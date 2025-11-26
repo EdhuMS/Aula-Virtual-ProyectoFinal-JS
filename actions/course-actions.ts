@@ -93,9 +93,9 @@ export async function deleteCourse(courseId: string) {
             where: { id: courseId },
         });
         revalidatePath("/admin/courses");
-        return { success: true, timestamp: Date.now() };
+        return { success: true, timestamp: Date.now() + Math.random() };
     } catch (error) {
-        return { success: false, error: "Failed to delete course", timestamp: Date.now() };
+        return { success: false, error: "Failed to delete course", timestamp: Date.now() + Math.random() };
     }
 }
 
@@ -159,9 +159,9 @@ export async function updateCourseTeacher(courseId: string, teacherId: string) {
         });
 
         revalidatePath("/admin/courses");
-        return { success: true, timestamp: Date.now() };
+        return { success: true, timestamp: Date.now() + Math.random() };
     } catch (error) {
         console.error("Failed to update course teacher:", error);
-        return { success: false, error: "Failed to update course teacher", timestamp: Date.now() };
+        return { success: false, error: "Failed to update course teacher", timestamp: Date.now() + Math.random() };
     }
 }

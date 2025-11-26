@@ -3,6 +3,7 @@
 import { useState, useActionState, useEffect } from "react";
 import { deleteCourse, updateCourseTeacher } from "@/actions/course-actions";
 import NextLink from "next/link";
+import { useRouter } from "next/navigation";
 import { Plus, Trash2, BookOpen, Users, Pencil, X, Loader2, User, AlertTriangle, CheckCircle } from "lucide-react";
 import { useFormStatus } from "react-dom";
 import { Modal } from "@/components/ui/modal";
@@ -51,6 +52,7 @@ export default function CourseManagementClient({ initialCourses, teachers }: { i
     const [editingCourse, setEditingCourse] = useState<any>(null);
     const [deletingCourse, setDeletingCourse] = useState<any>(null);
     const [successMessage, setSuccessMessage] = useState("");
+    const router = useRouter();
 
     const [updateState, setUpdateState] = useState<State>(initialState);
     const [isUpdating, setIsUpdating] = useState(false);
@@ -71,8 +73,9 @@ export default function CourseManagementClient({ initialCourses, teachers }: { i
         if (deleteState.success) {
             setDeletingCourse(null);
             setSuccessMessage("Curso eliminado correctamente");
+            router.refresh();
         }
-    }, [deleteState]);
+    }, [deleteState, router]);
 
     async function handleUpdateTeacher(formData: FormData) {
         setIsUpdating(true);

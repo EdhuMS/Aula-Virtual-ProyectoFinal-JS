@@ -6,6 +6,7 @@ import { User as UserIcon, Search, Filter, Trash2, Plus, Mail, Lock, Shield, Pen
 import { Modal } from "@/components/ui/modal";
 import { SubmitButton } from "@/components/ui/submit-button";
 import { Role } from "@prisma/client";
+import { useRouter } from "next/navigation";
 
 interface User {
     id: string;
@@ -30,6 +31,7 @@ export default function UserManagementClient({ initialUsers }: { initialUsers: U
     const [users, setUsers] = useState<User[]>(initialUsers);
     const [searchTerm, setSearchTerm] = useState("");
     const [roleFilter, setRoleFilter] = useState("ALL");
+    const router = useRouter();
 
     const [createState, createFormAction] = useActionState(createUser, initialState);
     const [updateState, updateFormAction] = useActionState(updateUser, initialState);
@@ -60,23 +62,26 @@ export default function UserManagementClient({ initialUsers }: { initialUsers: U
         if (updateState.success) {
             setEditingUser(null);
             setSuccessMessage("Usuario actualizado correctamente");
+            router.refresh();
         }
-    }, [updateState]);
+    }, [updateState, router]);
 
     // Manejar Éxito de Eliminación
     useEffect(() => {
         if (deleteState.success) {
             setDeletingUser(null);
             setSuccessMessage("Usuario eliminado correctamente");
+            router.refresh();
         }
-    }, [deleteState]);
+    }, [deleteState, router]);
 
     // Manejar Éxito de Creación
     useEffect(() => {
         if (createState.success) {
             setSuccessMessage("Usuario creado correctamente");
+            router.refresh();
         }
-    }, [createState]);
+    }, [createState, router]);
 
 
     // Lógica de filtrado

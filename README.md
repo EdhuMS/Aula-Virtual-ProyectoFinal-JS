@@ -26,7 +26,7 @@ Este proyecto utiliza una arquitectura moderna basada en **Next.js 15** (App Rou
 
 - **Frontend**: React, Tailwind CSS 4.0, Lucide React (Iconos).
 - **Backend**: Next.js Server Actions (API-less architecture).
-- **Base de Datos**: PostgreSQL (vía Prisma ORM).
+- **Base de Datos**: MySQL (vía Prisma ORM).
 - **Autenticación**: NextAuth.js (Credenciales).
 - **Almacenamiento**: Cloudinary (para imágenes y archivos de tareas).
 - **Lenguaje**: TypeScript.
@@ -52,7 +52,7 @@ prisma/                     # Esquema de Base de Datos y Seed
 ## 📋 Requisitos Previos
 
 - **Node.js** (v18 o superior)
-- **PostgreSQL** (Base de datos local o remota, e.g., Supabase, Neon)
+- **MySQL** (Base de datos local o remota, e.g., Aiven, PlanetScale)
 - **Cuenta de Cloudinary** (para subida de archivos)
 
 ## ⚙️ Instalación y Configuración
@@ -72,7 +72,7 @@ prisma/                     # Esquema de Base de Datos y Seed
     Crea un archivo `.env` en la raíz del proyecto con las siguientes variables:
 
     ```env
-    DATABASE_URL="postgresql://usuario:password@localhost:5432/aula_virtual"
+    DATABASE_URL="mysql://usuario:password@localhost:3306/aula_virtual"
     NEXTAUTH_SECRET="tu_secreto_super_seguro"
     NEXTAUTH_URL="http://localhost:3000"
     
