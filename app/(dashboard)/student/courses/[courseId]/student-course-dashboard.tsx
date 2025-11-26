@@ -28,25 +28,27 @@ export default async function StudentCourseDashboard({ courseId }: { courseId: s
             </div>
 
             <div className="bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden">
-                <div className="bg-gradient-to-r from-blue-600 to-indigo-600 p-10 text-white flex justify-between items-center">
+                <div className="bg-gradient-to-r from-blue-600 to-indigo-600 p-6 md:p-10 text-white flex flex-col md:flex-row md:justify-between md:items-center gap-6">
                     <div>
-                        <h1 className="text-3xl text-white font-bold mb-2">Contenido del Curso</h1>
-                        <p className="text-blue-100 text-lg">Explora los módulos y lecciones disponibles.</p>
+                        <h1 className="text-2xl md:text-3xl text-white font-bold mb-2">Contenido del Curso</h1>
+                        <p className="text-blue-100 text-base md:text-lg">Explora los módulos y lecciones disponibles.</p>
                     </div>
-                    <Link
-                        href={`/student/courses/${courseId}/assignments`}
-                        className="bg-white/10 hover:bg-white/20 text-white px-6 py-3 rounded-xl backdrop-blur-sm transition-all font-bold flex items-center gap-2 border border-white/20"
-                    >
-                        <FileText className="w-5 h-5" />
-                        Ver Tareas
-                    </Link>
-                    <Link
-                        href={`/student/courses/${courseId}/quizzes`}
-                        className="bg-white/10 hover:bg-white/20 text-white px-6 py-3 rounded-xl backdrop-blur-sm transition-all font-bold flex items-center gap-2 border border-white/20 ml-3"
-                    >
-                        <HelpCircle className="w-5 h-5" />
-                        Ver Cuestionarios
-                    </Link>
+                    <div className="flex flex-col sm:flex-row gap-3 w-full md:w-auto">
+                        <Link
+                            href={`/student/courses/${courseId}/assignments`}
+                            className="bg-white/10 hover:bg-white/20 text-white px-6 py-3 rounded-xl backdrop-blur-sm transition-all font-bold flex items-center justify-center gap-2 border border-white/20"
+                        >
+                            <FileText className="w-5 h-5" />
+                            Ver Tareas
+                        </Link>
+                        <Link
+                            href={`/student/courses/${courseId}/quizzes`}
+                            className="bg-white/10 hover:bg-white/20 text-white px-6 py-3 rounded-xl backdrop-blur-sm transition-all font-bold flex items-center justify-center gap-2 border border-white/20"
+                        >
+                            <HelpCircle className="w-5 h-5" />
+                            Ver Cuestionarios
+                        </Link>
+                    </div>
                 </div>
 
                 <div className="p-8 bg-gray-50/50 min-h-[400px]">
@@ -62,12 +64,12 @@ export default async function StudentCourseDashboard({ courseId }: { courseId: s
                         <div className="space-y-6">
                             {modules?.map((module: any) => (
                                 <div key={module.id} className="bg-white border border-gray-200 rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-shadow">
-                                    <div className="bg-white p-5 border-b border-gray-100 flex justify-between items-center">
+                                    <div className="bg-white p-4 md:p-5 border-b border-gray-100 flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2">
                                         <div>
                                             <h3 className="font-bold text-gray-900 text-lg">{module.title}</h3>
                                             {module.description && <p className="text-gray-500 text-sm mt-1">{module.description}</p>}
                                         </div>
-                                        <span className="text-xs font-bold bg-blue-50 text-blue-600 px-3 py-1 rounded-full border border-blue-100">
+                                        <span className="text-xs font-bold bg-blue-50 text-blue-600 px-3 py-1 rounded-full border border-blue-100 w-fit">
                                             {module.lessons.length} Lecciones
                                         </span>
                                     </div>

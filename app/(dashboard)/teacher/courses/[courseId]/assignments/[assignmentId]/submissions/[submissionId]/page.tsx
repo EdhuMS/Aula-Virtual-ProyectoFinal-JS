@@ -121,18 +121,18 @@ export default function GradeSubmissionPage() {
 
             <div className="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
                 <div className="bg-gray-50 border-b border-gray-200 p-6">
-                    <div className="flex items-center justify-between">
+                    <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                         <div className="flex items-center gap-4">
-                            <div className="bg-blue-100 p-3 rounded-full text-blue-600">
+                            <div className="bg-blue-100 p-3 rounded-full text-blue-600 flex-shrink-0">
                                 <User className="w-6 h-6" />
                             </div>
-                            <div>
-                                <h1 className="text-xl font-bold text-gray-900">{submission.student.name}</h1>
-                                <p className="text-gray-500 text-sm">{submission.student.email}</p>
+                            <div className="min-w-0">
+                                <h1 className="text-xl font-bold text-gray-900 truncate">{submission.student.name}</h1>
+                                <p className="text-gray-500 text-sm truncate">{submission.student.email}</p>
                             </div>
                         </div>
                         {isLocked && (
-                            <div className="flex items-center gap-2 bg-amber-100 text-amber-800 px-3 py-1.5 rounded-lg text-sm font-medium">
+                            <div className="flex items-center gap-2 bg-amber-100 text-amber-800 px-3 py-1.5 rounded-lg text-sm font-medium w-fit">
                                 <Lock className="w-4 h-4" />
                                 Calificación Bloqueada
                             </div>

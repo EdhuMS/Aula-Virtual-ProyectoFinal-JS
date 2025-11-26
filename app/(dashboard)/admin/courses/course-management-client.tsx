@@ -99,7 +99,8 @@ export default function CourseManagementClient({ initialCourses, teachers }: { i
                 </NextLink>
             </div>
 
-            <div className="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
+            {/* Tabla de Cursos (Desktop) */}
+            <div className="hidden md:block bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
                 <div className="overflow-x-auto">
                     <table className="min-w-full divide-y divide-gray-100">
                         <thead className="bg-gray-50/50">
@@ -178,6 +179,66 @@ export default function CourseManagementClient({ initialCourses, teachers }: { i
                         <h3 className="text-lg font-medium text-gray-900">No hay cursos</h3>
                         <p className="text-gray-500">Crea el primer curso para comenzar.</p>
                     </div>
+                )}
+            </div>
+
+            {/* Vista Móvil (Cards) */}
+            <div className="md:hidden space-y-4">
+                {courses?.length === 0 ? (
+                    <div className="text-center py-12 bg-white rounded-2xl border border-gray-200">
+                        <div className="bg-gray-50 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <BookOpen className="w-8 h-8 text-gray-400" />
+                        </div>
+                        <h3 className="text-lg font-medium text-gray-900">No hay cursos</h3>
+                        <p className="text-gray-500">Crea el primer curso para comenzar.</p>
+                    </div>
+                ) : (
+                    courses?.map((course) => (
+                        <div key={course.id} className="bg-white p-4 rounded-xl shadow-sm border border-gray-200 space-y-4">
+                            <div className="flex items-start gap-3">
+                                <div className="h-12 w-12 flex-shrink-0 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-xl flex items-center justify-center text-white shadow-md shadow-blue-500/20">
+                                    <BookOpen className="w-6 h-6" />
+                                </div>
+                                <div className="flex-1 min-w-0">
+                                    <div className="text-sm font-bold text-gray-900 truncate">{course.title}</div>
+                                    <div className="text-xs text-gray-500 line-clamp-2">{course.description}</div>
+                                </div>
+                            </div>
+
+                            <div className="flex items-center justify-between text-xs text-gray-500 bg-gray-50 p-2 rounded-lg">
+                                <span className="font-medium text-gray-700">{course.teacher.name}</span>
+                                <div className="flex gap-3">
+                                    <span className="flex items-center gap-1">
+                                        <BookOpen className="w-3 h-3" /> {course._count.modules}
+                                    </span>
+                                    <span className="flex items-center gap-1">
+                                        <Users className="w-3 h-3" /> {course._count.enrollments}
+                                    </span>
+                                </div>
+                            </div>
+
+                            <div className="flex items-center justify-end gap-2 pt-2 border-t border-gray-100">
+                                <button
+                                    onClick={() => setEditingCourse(course)}
+                                    className="text-gray-400 hover:text-blue-600 p-2 hover:bg-blue-50 rounded-lg transition-colors"
+                                >
+                                    <Pencil className="w-5 h-5" />
+                                </button>
+                                <NextLink
+                                    href={`/admin/courses/${course.id}/enrollments`}
+                                    className="text-gray-400 hover:text-blue-600 p-2 hover:bg-blue-50 rounded-lg transition-colors"
+                                >
+                                    <Users className="w-5 h-5" />
+                                </NextLink>
+                                <button
+                                    onClick={() => setDeletingCourse(course)}
+                                    className="text-gray-400 hover:text-red-600 p-2 hover:bg-red-50 rounded-lg transition-colors"
+                                >
+                                    <Trash2 className="w-5 h-5" />
+                                </button>
+                            </div>
+                        </div>
+                    ))
                 )}
             </div>
 

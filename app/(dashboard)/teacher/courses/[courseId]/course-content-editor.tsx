@@ -100,7 +100,7 @@ export default function CourseContentEditor({ courseId, modules }: { courseId: s
         <div className="space-y-8">
             {/* Encabezado y Pestañas */}
             <div className="flex flex-col gap-6">
-                <div className="flex justify-between items-center">
+                <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-4">
                     <div>
                         <h2 className="text-2xl font-bold text-gray-900">Contenido del Curso</h2>
                         <p className="text-gray-500 text-sm mt-1">Gestiona el temario, tareas y evaluaciones.</p>
@@ -108,7 +108,7 @@ export default function CourseContentEditor({ courseId, modules }: { courseId: s
                     {activeTab === 'modules' && (
                         <button
                             onClick={() => setIsCreatingModule(true)}
-                            className="bg-blue-600 text-white px-5 py-2.5 rounded-xl hover:bg-blue-700 flex items-center gap-2 shadow-lg shadow-blue-600/20 transition-all font-medium"
+                            className="bg-blue-600 text-white px-5 py-2.5 rounded-xl hover:bg-blue-700 flex items-center justify-center gap-2 shadow-lg shadow-blue-600/20 transition-all font-medium w-full md:w-auto"
                         >
                             <Plus className="w-5 h-5" /> Nuevo Módulo
                         </button>
@@ -116,33 +116,34 @@ export default function CourseContentEditor({ courseId, modules }: { courseId: s
                     {activeTab === 'assignments' && (
                         <Link
                             href={`/teacher/courses/${courseId}/assignments/new`}
-                            className="bg-orange-600 text-white px-5 py-2.5 rounded-xl hover:bg-orange-700 flex items-center gap-2 shadow-lg shadow-orange-600/20 transition-all font-medium"
+                            className="bg-orange-600 text-white px-5 py-2.5 rounded-xl hover:bg-orange-700 flex items-center justify-center gap-2 shadow-lg shadow-orange-600/20 transition-all font-medium w-full md:w-auto"
                         >
                             <Plus className="w-5 h-5" /> Nueva Tarea
                         </Link>
                     )}
-                    {/* La creación de cuestionarios se maneja dentro de los módulos por ahora, o podemos agregar un botón global si agregamos un selector de módulos */}
                 </div>
 
-                <div className="flex gap-1 bg-gray-100 p-1 rounded-xl w-fit">
-                    <button
-                        onClick={() => setActiveTab('modules')}
-                        className={`px-6 py-2 rounded-lg text-sm font-medium transition-all ${activeTab === 'modules' ? 'bg-white text-gray-900 shadow-sm' : 'text-gray-500 hover:text-gray-700'}`}
-                    >
-                        Módulos y Lecciones
-                    </button>
-                    <button
-                        onClick={() => setActiveTab('assignments')}
-                        className={`px-6 py-2 rounded-lg text-sm font-medium transition-all ${activeTab === 'assignments' ? 'bg-white text-gray-900 shadow-sm' : 'text-gray-500 hover:text-gray-700'}`}
-                    >
-                        Tareas ({allAssignments.length})
-                    </button>
-                    <button
-                        onClick={() => setActiveTab('quizzes')}
-                        className={`px-6 py-2 rounded-lg text-sm font-medium transition-all ${activeTab === 'quizzes' ? 'bg-white text-gray-900 shadow-sm' : 'text-gray-500 hover:text-gray-700'}`}
-                    >
-                        Evaluaciones ({allQuizzes.length})
-                    </button>
+                <div className="overflow-x-auto pb-2 -mx-4 px-4 md:mx-0 md:px-0 md:pb-0">
+                    <div className="flex gap-1 bg-gray-100 p-1 rounded-xl w-max md:w-fit">
+                        <button
+                            onClick={() => setActiveTab('modules')}
+                            className={`px-6 py-2 rounded-lg text-sm font-medium transition-all whitespace-nowrap ${activeTab === 'modules' ? 'bg-white text-gray-900 shadow-sm' : 'text-gray-500 hover:text-gray-700'}`}
+                        >
+                            Módulos y Lecciones
+                        </button>
+                        <button
+                            onClick={() => setActiveTab('assignments')}
+                            className={`px-6 py-2 rounded-lg text-sm font-medium transition-all whitespace-nowrap ${activeTab === 'assignments' ? 'bg-white text-gray-900 shadow-sm' : 'text-gray-500 hover:text-gray-700'}`}
+                        >
+                            Tareas ({allAssignments.length})
+                        </button>
+                        <button
+                            onClick={() => setActiveTab('quizzes')}
+                            className={`px-6 py-2 rounded-lg text-sm font-medium transition-all whitespace-nowrap ${activeTab === 'quizzes' ? 'bg-white text-gray-900 shadow-sm' : 'text-gray-500 hover:text-gray-700'}`}
+                        >
+                            Evaluaciones ({allQuizzes.length})
+                        </button>
+                    </div>
                 </div>
             </div>
 
@@ -170,36 +171,36 @@ export default function CourseContentEditor({ courseId, modules }: { courseId: s
                     <div className="space-y-4">
                         {modules.map((module) => (
                             <div key={module.id} className="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden transition-all hover:shadow-md">
-                                <div className="p-5 bg-white flex items-center justify-between group">
+                                <div className="p-4 md:p-5 bg-white flex flex-col md:flex-row md:items-center justify-between gap-4 group">
                                     <div
-                                        className="flex items-center gap-4 cursor-pointer flex-1 select-none"
+                                        className="flex items-start md:items-center gap-3 md:gap-4 cursor-pointer flex-1 select-none"
                                         onClick={() => toggleModule(module.id)}
                                     >
-                                        <div className={`p-2 rounded-lg transition-colors ${expandedModules[module.id] ? 'bg-blue-50 text-blue-600' : 'bg-gray-50 text-gray-400 group-hover:text-gray-600'}`}>
+                                        <div className={`p-2 rounded-lg transition-colors flex-shrink-0 ${expandedModules[module.id] ? 'bg-blue-50 text-blue-600' : 'bg-gray-50 text-gray-400 group-hover:text-gray-600'}`}>
                                             {expandedModules[module.id] ? <ChevronDown className="w-5 h-5" /> : <ChevronRight className="w-5 h-5" />}
                                         </div>
-                                        <div>
-                                            <h3 className="font-bold text-gray-900 text-lg">{module.title}</h3>
+                                        <div className="min-w-0">
+                                            <h3 className="font-bold text-gray-900 text-base md:text-lg break-words">{module.title}</h3>
                                             <span className="text-xs font-medium text-gray-500 bg-gray-100 px-2.5 py-0.5 rounded-full mt-1 inline-block">
                                                 {module.lessons.length} lecciones
                                             </span>
                                         </div>
                                     </div>
-                                    <div className="flex items-center gap-1">
+                                    <div className="flex items-center justify-end gap-1 border-t md:border-t-0 pt-3 md:pt-0 border-gray-50">
                                         <button
                                             onClick={() => {
                                                 setIsCreatingLesson(module.id);
                                                 setExpandedModules(prev => ({ ...prev, [module.id]: true }));
                                             }}
-                                            className="text-blue-600 hover:bg-blue-50 p-2.5 rounded-xl transition-colors flex items-center gap-2 font-medium text-sm"
+                                            className="text-blue-600 hover:bg-blue-50 p-2 md:p-2.5 rounded-xl transition-colors flex items-center gap-2 font-medium text-sm"
                                             title="Añadir Lección"
                                         >
-                                            <Plus className="w-4 h-4" /> Lección
+                                            <Plus className="w-4 h-4" /> <span className="md:inline">Lección</span>
                                         </button>
                                         <div className="w-px h-6 bg-gray-200 mx-1"></div>
                                         <button
                                             onClick={() => setDeletingItem({ type: 'module', id: module.id, title: module.title })}
-                                            className="text-gray-400 hover:text-red-600 p-2.5 rounded-xl hover:bg-red-50 transition-colors"
+                                            className="text-gray-400 hover:text-red-600 p-2 md:p-2.5 rounded-xl hover:bg-red-50 transition-colors"
                                             title="Eliminar Módulo"
                                         >
                                             <Trash2 className="w-5 h-5" />
@@ -212,17 +213,17 @@ export default function CourseContentEditor({ courseId, modules }: { courseId: s
                                         <div className="space-y-1">
                                             {/* Lecciones */}
                                             {module.lessons.map((lesson: any) => (
-                                                <div key={lesson.id} className="flex items-center justify-between p-3 hover:bg-white hover:shadow-sm rounded-xl group transition-all border border-transparent hover:border-gray-100 ml-4">
-                                                    <div className="flex items-center gap-4">
-                                                        <div className="text-gray-300 cursor-grab active:cursor-grabbing">
+                                                <div key={lesson.id} className="flex flex-col sm:flex-row sm:items-center justify-between p-3 hover:bg-white hover:shadow-sm rounded-xl group transition-all border border-transparent hover:border-gray-100 ml-0 md:ml-4 gap-3">
+                                                    <div className="flex items-start sm:items-center gap-3 md:gap-4">
+                                                        <div className="text-gray-300 cursor-grab active:cursor-grabbing mt-1 sm:mt-0">
                                                             <GripVertical className="w-4 h-4" />
                                                         </div>
-                                                        <div className="bg-blue-100 p-2 rounded-lg text-blue-600">
+                                                        <div className="bg-blue-100 p-2 rounded-lg text-blue-600 flex-shrink-0">
                                                             <FileText className="w-4 h-4" />
                                                         </div>
-                                                        <span className="text-gray-700 font-medium">{lesson.title}</span>
+                                                        <span className="text-gray-700 font-medium break-words">{lesson.title}</span>
                                                     </div>
-                                                    <div className="flex items-center gap-1">
+                                                    <div className="flex items-center justify-end gap-1 pl-10 sm:pl-0">
                                                         <Link
                                                             href={`/teacher/courses/${courseId}/lessons/${lesson.id}`}
                                                             className="text-gray-400 hover:text-blue-600 p-2 hover:bg-blue-50 rounded-lg transition-colors"
@@ -243,20 +244,20 @@ export default function CourseContentEditor({ courseId, modules }: { courseId: s
 
                                             {/* Tareas */}
                                             {module.assignments?.map((assignment: any) => (
-                                                <div key={assignment.id} className="flex items-center justify-between p-3 hover:bg-white hover:shadow-sm rounded-xl group transition-all border border-transparent hover:border-gray-100 ml-4">
-                                                    <div className="flex items-center gap-4">
-                                                        <div className="text-gray-300 opacity-0">
+                                                <div key={assignment.id} className="flex flex-col sm:flex-row sm:items-center justify-between p-3 hover:bg-white hover:shadow-sm rounded-xl group transition-all border border-transparent hover:border-gray-100 ml-0 md:ml-4 gap-3">
+                                                    <div className="flex items-start sm:items-center gap-3 md:gap-4">
+                                                        <div className="text-gray-300 opacity-0 hidden sm:block">
                                                             <GripVertical className="w-4 h-4" />
                                                         </div>
-                                                        <div className="bg-orange-100 p-2 rounded-lg text-orange-600">
+                                                        <div className="bg-orange-100 p-2 rounded-lg text-orange-600 flex-shrink-0">
                                                             <FileText className="w-4 h-4" />
                                                         </div>
                                                         <div>
-                                                            <span className="text-gray-700 font-medium block">{assignment.title}</span>
+                                                            <span className="text-gray-700 font-medium block break-words">{assignment.title}</span>
                                                             <span className="text-xs text-gray-500">Tarea • Vence: {new Date(assignment.dueDate).toLocaleDateString()}</span>
                                                         </div>
                                                     </div>
-                                                    <div className="flex items-center gap-1">
+                                                    <div className="flex items-center justify-end gap-1 pl-10 sm:pl-0">
                                                         <Link
                                                             href={`/teacher/courses/${courseId}/assignments/${assignment.id}`}
                                                             className="text-gray-400 hover:text-blue-600 p-2 hover:bg-blue-50 rounded-lg transition-colors"
@@ -279,17 +280,17 @@ export default function CourseContentEditor({ courseId, modules }: { courseId: s
                                             {module.quizzes?.map((quiz: any) => {
                                                 const isClosed = quiz.closesAt && new Date(quiz.closesAt) < new Date();
                                                 return (
-                                                    <div key={quiz.id} className="flex items-center justify-between p-3 hover:bg-white hover:shadow-sm rounded-xl group transition-all border border-transparent hover:border-gray-100 ml-4">
-                                                        <div className="flex items-center gap-4">
-                                                            <div className="text-gray-300 opacity-0">
+                                                    <div key={quiz.id} className="flex flex-col sm:flex-row sm:items-center justify-between p-3 hover:bg-white hover:shadow-sm rounded-xl group transition-all border border-transparent hover:border-gray-100 ml-0 md:ml-4 gap-3">
+                                                        <div className="flex items-start sm:items-center gap-3 md:gap-4">
+                                                            <div className="text-gray-300 opacity-0 hidden sm:block">
                                                                 <GripVertical className="w-4 h-4" />
                                                             </div>
-                                                            <div className="bg-purple-100 p-2 rounded-lg text-purple-600">
+                                                            <div className="bg-purple-100 p-2 rounded-lg text-purple-600 flex-shrink-0">
                                                                 <HelpCircle className="w-4 h-4" />
                                                             </div>
                                                             <div>
-                                                                <span className="text-gray-700 font-medium block">{quiz.title}</span>
-                                                                <div className="flex items-center gap-2 text-xs text-gray-500">
+                                                                <span className="text-gray-700 font-medium block break-words">{quiz.title}</span>
+                                                                <div className="flex flex-wrap items-center gap-2 text-xs text-gray-500">
                                                                     <span>Cuestionario • {quiz.questions?.length || 0} preguntas</span>
                                                                     {isClosed ? (
                                                                         <span className="text-red-600 font-medium bg-red-50 px-1.5 rounded border border-red-100">Cerrado</span>
@@ -299,7 +300,7 @@ export default function CourseContentEditor({ courseId, modules }: { courseId: s
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                        <div className="flex items-center gap-1">
+                                                        <div className="flex items-center justify-end gap-1 pl-10 sm:pl-0">
                                                             <Link
                                                                 href={`/teacher/courses/${courseId}/quizzes/${quiz.id}/results`}
                                                                 className="text-gray-400 hover:text-green-600 p-2 hover:bg-green-50 rounded-lg transition-colors"

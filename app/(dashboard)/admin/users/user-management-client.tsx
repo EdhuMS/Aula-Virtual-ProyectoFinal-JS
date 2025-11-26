@@ -202,8 +202,8 @@ export default function UserManagementClient({ initialUsers }: { initialUsers: U
                 </div>
             </div>
 
-            {/* Tabla de Usuarios */}
-            <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+            {/* Tabla de Usuarios (Desktop) */}
+            <div className="hidden md:block bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
                 <div className="overflow-x-auto">
                     <table className="min-w-full divide-y divide-gray-100">
                         <thead className="bg-gray-50/50">
@@ -284,6 +284,67 @@ export default function UserManagementClient({ initialUsers }: { initialUsers: U
                     <span>Mostrando {filteredUsers.length} usuarios</span>
                     <span>Total: {users.length}</span>
                 </div>
+            </div>
+
+            {/* Vista Móvil (Cards) */}
+            <div className="md:hidden space-y-4">
+                {filteredUsers.length === 0 ? (
+                    <div className="text-center py-12 bg-white rounded-2xl border border-gray-100 text-gray-500">
+                        No se encontraron usuarios.
+                    </div>
+                ) : (
+                    filteredUsers.map((user) => (
+                        <div key={user.id} className="bg-white p-4 rounded-xl shadow-sm border border-gray-100 space-y-4">
+                            <div className="flex items-center justify-between">
+                                <div className="flex items-center gap-3">
+                                    <div className="h-10 w-10 rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center text-white font-bold text-sm shadow-sm">
+                                        {user.name.charAt(0).toUpperCase()}
+                                    </div>
+                                    <div>
+                                        <div className="text-sm font-bold text-gray-900">{user.name}</div>
+                                        <div className="text-xs text-gray-500">{user.email}</div>
+                                    </div>
+                                </div>
+                                <span className={`px-2.5 py-0.5 inline-flex text-xs font-bold rounded-full border ${user.role === 'ADMIN' ? 'bg-purple-50 text-purple-700 border-purple-100' :
+                                    user.role === 'TEACHER' ? 'bg-emerald-50 text-emerald-700 border-emerald-100' :
+                                        'bg-blue-50 text-blue-700 border-blue-100'
+                                    } `}>
+                                    {user.role === 'ADMIN' ? 'Admin' :
+                                        user.role === 'TEACHER' ? 'Prof' : 'Est'}
+                                </span>
+                            </div>
+
+                            <div className="flex items-center justify-between pt-3 border-t border-gray-50">
+                                <span className="text-xs text-gray-400">
+                                    Registrado: {new Date(user.createdAt).toLocaleDateString()}
+                                </span>
+                                <div className="flex items-center gap-1">
+                                    <button
+                                        onClick={() => {
+                                            setEditingUser(user);
+                                            setShowEditPassword(false);
+                                        }}
+                                        className="text-gray-400 hover:text-blue-600 p-2 hover:bg-blue-50 rounded-lg transition-colors"
+                                    >
+                                        <Pencil className="w-4 h-4" />
+                                    </button>
+                                    {user.email === "admin@aulavirtual.com" ? (
+                                        <div className="text-gray-300 p-2">
+                                            <Shield className="w-4 h-4" />
+                                        </div>
+                                    ) : (
+                                        <button
+                                            onClick={() => setDeletingUser(user)}
+                                            className="text-gray-400 hover:text-red-600 p-2 hover:bg-red-50 rounded-lg transition-colors"
+                                        >
+                                            <Trash2 className="w-4 h-4" />
+                                        </button>
+                                    )}
+                                </div>
+                            </div>
+                        </div>
+                    ))
+                )}
             </div>
 
             {/* Modal de Edición de Usuario */}

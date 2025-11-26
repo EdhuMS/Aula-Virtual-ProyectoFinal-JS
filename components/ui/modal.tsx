@@ -32,7 +32,7 @@ export const Modal = ({ isOpen, onClose, title, children }: ModalProps) => {
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-in fade-in duration-200">
             <div
-                className="bg-white rounded-2xl shadow-xl max-w-md w-full overflow-hidden animate-in zoom-in-95 duration-200"
+                className="bg-white rounded-2xl shadow-xl max-w-md w-full overflow-hidden animate-in zoom-in-95 duration-200 max-h-[90vh] flex flex-col"
                 onClick={(e) => e.stopPropagation()}
             >
                 <div className="flex justify-between items-center p-6 border-b border-gray-100">
@@ -45,7 +45,7 @@ export const Modal = ({ isOpen, onClose, title, children }: ModalProps) => {
                     </button>
                 </div>
 
-                <div className="p-6">
+                <div className="p-6 overflow-y-auto">
                     {children}
                 </div>
             </div>
