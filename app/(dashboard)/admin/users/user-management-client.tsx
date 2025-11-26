@@ -355,12 +355,12 @@ export default function UserManagementClient({ initialUsers }: { initialUsers: U
             </div>
 
             {/* Modal de Edición de Usuario */}
-            <Modal
-                isOpen={!!editingUser}
-                onClose={() => setEditingUser(null)}
-                title="Editar Usuario"
-            >
-                {editingUser && (
+            {editingUser && (
+                <Modal
+                    isOpen={true}
+                    onClose={() => setEditingUser(null)}
+                    title="Editar Usuario"
+                >
                     <form action={updateFormAction} className="space-y-4">
                         <input type="hidden" name="userId" value={editingUser.id} />
 
@@ -438,16 +438,16 @@ export default function UserManagementClient({ initialUsers }: { initialUsers: U
                             <SubmitButton text="Guardar Cambios" loadingText="Guardando..." />
                         </div>
                     </form>
-                )}
-            </Modal>
+                </Modal>
+            )}
 
             {/* Modal de Confirmación de Eliminación */}
-            <Modal
-                isOpen={!!deletingUser}
-                onClose={() => setDeletingUser(null)}
-                title="Confirmar Eliminación"
-            >
-                {deletingUser && (
+            {deletingUser && (
+                <Modal
+                    isOpen={true}
+                    onClose={() => setDeletingUser(null)}
+                    title="Confirmar Eliminación"
+                >
                     <div className="space-y-6">
                         <div className="flex items-center gap-4 p-4 bg-red-50 rounded-xl border border-red-100 text-red-700">
                             <AlertTriangle className="w-10 h-10 flex-shrink-0" />
@@ -475,30 +475,32 @@ export default function UserManagementClient({ initialUsers }: { initialUsers: U
                             </div>
                         </form>
                     </div>
-                )}
-            </Modal>
+                </Modal>
+            )}
 
             {/* Modal de Éxito */}
-            <Modal
-                isOpen={!!successMessage}
-                onClose={() => setSuccessMessage("")}
-                title="¡Éxito!"
-            >
-                <div className="text-center space-y-6">
-                    <div className="w-16 h-16 bg-green-100 text-green-600 rounded-full flex items-center justify-center mx-auto">
-                        <CheckCircle className="w-8 h-8" />
+            {successMessage && (
+                <Modal
+                    isOpen={true}
+                    onClose={() => setSuccessMessage("")}
+                    title="¡Éxito!"
+                >
+                    <div className="text-center space-y-6">
+                        <div className="w-16 h-16 bg-green-100 text-green-600 rounded-full flex items-center justify-center mx-auto">
+                            <CheckCircle className="w-8 h-8" />
+                        </div>
+                        <p className="text-gray-600 text-lg">
+                            {successMessage}
+                        </p>
+                        <button
+                            onClick={() => setSuccessMessage("")}
+                            className="w-full bg-blue-600 text-white px-4 py-2.5 rounded-xl hover:bg-blue-700 font-semibold transition-colors"
+                        >
+                            Entendido
+                        </button>
                     </div>
-                    <p className="text-gray-600 text-lg">
-                        {successMessage}
-                    </p>
-                    <button
-                        onClick={() => setSuccessMessage("")}
-                        className="w-full bg-blue-600 text-white px-4 py-2.5 rounded-xl hover:bg-blue-700 font-semibold transition-colors"
-                    >
-                        Entendido
-                    </button>
-                </div>
-            </Modal>
+                </Modal>
+            )}
         </div>
     );
 }
