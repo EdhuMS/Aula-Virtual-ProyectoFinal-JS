@@ -1,10 +1,11 @@
+require('dotenv').config();
 const cloudinary = require('cloudinary').v2;
 
 // Configure Cloudinary
 cloudinary.config({
-    cloud_name: 'dzfirlb1z',
-    api_key: '837772675295316',
-    api_secret: 'qW-S-I23zjoDNVxjNChYCDKN2x0'
+    cloud_name: process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME,
+    api_key: process.env.NEXT_PUBLIC_CLOUDINARY_API_KEY,
+    api_secret: process.env.CLOUDINARY_API_SECRET
 });
 
 async function createAssignmentPreset() {
