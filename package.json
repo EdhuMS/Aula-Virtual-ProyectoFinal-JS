@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "vercel-build": "prisma generate && prisma migrate deploy && prisma db seed && next build"
+    "vercel-build": "prisma generate && prisma db push --accept-data-loss && prisma db seed && next build"
   },
   "dependencies": {
     "@next-auth/prisma-adapter": "^1.0.7",
