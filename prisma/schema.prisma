@@ -1,0 +1,212 @@
+// Este es tu archivo de esquema Prisma,
+// aprende más al respecto en la documentación: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  ADMIN
+  TEACHER
+  STUDENT
+}
+
+model User {
+  id        String   @id @default(cuid())
+  name      String
+  email     String   @unique
+  image     String?
+  password  String
+  role      Role     @default(STUDENT)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relaciones
+  coursesTeaching     Course[]             @relation("TeacherCourses")
+  submissions         Submission[]
+  enrollments         Enrollment[]
+  quizAttempts        QuizAttempt[]
+  GradeChangeRequest  GradeChangeRequest[]
+  conversations       Conversation[]
+  sentMessages        Message[]            @relation("SentMessages")
+}
+
+model Course {
+  id          String   @id @default(cuid())
+  title       String
+  description String   @db.Text
+  imageUrl    String? // Imagen de portada opcional
+  teacherId   String
+  teacher     User     @relation("TeacherCourses", fields: [teacherId], references: [id])
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relaciones
+  modules     Module[]
+  enrollments Enrollment[]
+  assignments Assignment[] // Las tareas pueden vincularse al curso directamente o a través de módulos
+}
+
+// Tabla de unión para Estudiante <-> Curso (Muchos a Muchos)
+model Enrollment {
+  id         String   @id @default(cuid())
+  userId     String
+  courseId   String
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  course     Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  enrolledAt DateTime @default(now())
+
+  @@unique([userId, courseId])
+}
+
+model Module {
+  id          String   @id @default(cuid())
+  title       String
+  description String?
+  weekNumber  Int // Para ordenar módulos por semana
+  courseId    String
+  course      Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relaciones
+  lessons     Lesson[]
+  assignments Assignment[] // Las tareas suelen pertenecer a una semana/módulo específico
+  quizzes     Quiz[]
+}
+
+model Lesson {
+  id          String   @id @default(cuid())
+  title       String
+  content     String   @db.Text // Contenido Markdown o HTML
+  resourceUrl String? // URL de Cloudinary para PDF o video
+  order       Int      @default(0)
+  moduleId    String
+  module      Module   @relation(fields: [moduleId], references: [id], onDelete: Cascade)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // El seguimiento de la finalización podría agregarse aquí o en una tabla separada
+}
+
+model Assignment {
+  id           String   @id @default(cuid())
+  title        String
+  instructions String   @db.Text
+  dueDate      DateTime
+  moduleId     String
+  module       Module   @relation(fields: [moduleId], references: [id], onDelete: Cascade)
+  courseId     String // Desnormalizado para consultas más fáciles o si las tareas son a nivel de curso
+  course       Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  // Relaciones
+  submissions Submission[]
+}
+
+model Submission {
+  id             String   @id @default(cuid())
+  fileUrls       Json // Array de cadenas (URLs)
+  studentComment String?  @db.Text
+  grade          Float? // Nulo hasta que se califique
+  feedback       String?  @db.Text
+  submittedAt    DateTime @default(now())
+
+  studentId    String
+  student      User       @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  assignmentId String
+  assignment   Assignment @relation(fields: [assignmentId], references: [id], onDelete: Cascade)
+
+  canEditGrade Boolean @default(false) // Si es verdadero, el profesor puede modificar la calificación
+
+  // Relaciones
+  gradeChangeRequests GradeChangeRequest[]
+
+  @@unique([studentId, assignmentId]) // Un envío por tarea por estudiante
+}
+
+model GradeChangeRequest {
+  id           String        @id @default(cuid())
+  submissionId String
+  submission   Submission    @relation(fields: [submissionId], references: [id], onDelete: Cascade)
+  teacherId    String
+  teacher      User          @relation(fields: [teacherId], references: [id])
+  reason       String        @db.Text
+  status       RequestStatus @default(PENDING)
+  isReadByTeacher Boolean    @default(true) // Verdadero cuando se crea (el profesor lo sabe), Falso cuando el administrador actualiza (el profesor necesita saberlo)
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+
+  @@index([submissionId])
+  @@index([teacherId])
+}
+
+enum RequestStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+model Quiz {
+  id        String    @id @default(cuid())
+  title     String
+  moduleId  String
+  module    Module    @relation(fields: [moduleId], references: [id], onDelete: Cascade)
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  opensAt   DateTime?
+  closesAt  DateTime?
+
+  // Relaciones
+  questions QuizQuestion[]
+  attempts  QuizAttempt[]
+}
+
+model QuizQuestion {
+  id            String @id @default(cuid())
+  question      String
+  options       Json // Array de cadenas: ["Opción A", "Opción B", ...]
+  correctOption Int // Índice de la opción correcta (0, 1, 2, etc.)
+  points        Int    @default(1)
+  quizId        String
+  quiz          Quiz   @relation(fields: [quizId], references: [id], onDelete: Cascade)
+}
+
+model QuizAttempt {
+  id          String   @id @default(cuid())
+  score       Float
+  answers     Json
+  completedAt DateTime @default(now())
+
+  studentId String
+  student   User   @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  quizId    String
+  quiz      Quiz   @relation(fields: [quizId], references: [id], onDelete: Cascade)
+}
+
+model Conversation {
+  id        String    @id @default(cuid())
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  clearedAt Json?     // { "userId": "ISO-Date" }
+  
+  participants User[]
+  messages     Message[]
+}
+
+model Message {
+  id             String       @id @default(cuid())
+  content        String       @db.Text
+  senderId       String
+  sender         User         @relation("SentMessages", fields: [senderId], references: [id])
+  conversationId String
+  conversation   Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  createdAt      DateTime     @default(now())
+  read           Boolean      @default(false)
+}
