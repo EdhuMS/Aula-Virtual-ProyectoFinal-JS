@@ -66,7 +66,7 @@ export default function CourseManagementClient({ initialCourses, teachers }: { i
             setDeletingCourse(null);
             setSuccessMessage("Curso eliminado correctamente");
         }
-    }, [deleteState.success]);
+    }, [deleteState]);
 
     async function handleUpdateTeacher(formData: FormData) {
         setIsUpdating(true);

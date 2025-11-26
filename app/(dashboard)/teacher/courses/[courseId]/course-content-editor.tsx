@@ -360,20 +360,21 @@ export default function CourseContentEditor({ courseId, modules }: { courseId: s
                         </div>
                     ) : (
                         allAssignments.map((assignment: any) => (
-                            <div key={assignment.id} className="bg-white p-4 rounded-xl border border-gray-200 flex items-center justify-between hover:shadow-sm transition-shadow">
-                                <div className="flex items-center gap-4">
-                                    <div className="bg-orange-100 p-2.5 rounded-lg text-orange-600">
+                            <div key={assignment.id} className="bg-white p-4 rounded-xl border border-gray-200 flex flex-col sm:flex-row sm:items-center justify-between hover:shadow-sm transition-shadow gap-4">
+                                <div className="flex items-start sm:items-center gap-4">
+                                    <div className="bg-orange-100 p-2.5 rounded-lg text-orange-600 flex-shrink-0">
                                         <FileText className="w-5 h-5" />
                                     </div>
-                                    <div>
-                                        <h4 className="font-bold text-gray-900">{assignment.title}</h4>
-                                        <div className="flex items-center gap-3 text-xs text-gray-500 mt-1">
-                                            <span className="bg-gray-100 px-2 py-0.5 rounded text-gray-600 font-medium">{assignment.moduleTitle}</span>
+                                    <div className="min-w-0">
+                                        <h4 className="font-bold text-gray-900 break-words">{assignment.title}</h4>
+                                        <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3 text-xs text-gray-500 mt-1">
+                                            <span className="bg-gray-100 px-2 py-0.5 rounded text-gray-600 font-medium w-fit">{assignment.moduleTitle}</span>
+                                            <span className="hidden sm:inline">•</span>
                                             <span>Vence: {new Date(assignment.dueDate).toLocaleDateString()}</span>
                                         </div>
                                     </div>
                                 </div>
-                                <div className="flex items-center gap-1">
+                                <div className="flex items-center justify-end gap-1 border-t sm:border-t-0 pt-3 sm:pt-0 border-gray-50">
                                     <Link
                                         href={`/teacher/courses/${courseId}/assignments/${assignment.id}`}
                                         className="text-gray-400 hover:text-blue-600 p-2 hover:bg-blue-50 rounded-lg transition-colors"
@@ -399,7 +400,7 @@ export default function CourseContentEditor({ courseId, modules }: { courseId: s
                     {/* Creador de Cuestionarios Simple para esta vista */}
                     <div className="bg-white p-6 rounded-2xl border border-gray-200 shadow-sm">
                         <h3 className="font-bold text-gray-900 mb-4">Crear Nueva Evaluación</h3>
-                        <div className="flex gap-4 items-end">
+                        <div className="flex flex-col md:flex-row gap-4 md:items-end">
                             <div className="flex-1 space-y-1">
                                 <label className="text-xs font-semibold text-gray-500 uppercase">Módulo</label>
                                 <select
@@ -426,7 +427,7 @@ export default function CourseContentEditor({ courseId, modules }: { courseId: s
                                     if (isCreatingQuiz) handleCreateQuiz(e, isCreatingQuiz);
                                 }}
                                 disabled={!isCreatingQuiz || !newQuizTitle}
-                                className="bg-purple-600 text-white px-6 py-2.5 rounded-xl hover:bg-purple-700 font-medium disabled:opacity-50 disabled:cursor-not-allowed"
+                                className="bg-purple-600 text-white px-6 py-2.5 rounded-xl hover:bg-purple-700 font-medium disabled:opacity-50 disabled:cursor-not-allowed w-full md:w-auto"
                             >
                                 Crear
                             </button>
@@ -442,25 +443,27 @@ export default function CourseContentEditor({ courseId, modules }: { courseId: s
                             allQuizzes.map((quiz: any) => {
                                 const isClosed = quiz.closesAt && new Date(quiz.closesAt) < new Date();
                                 return (
-                                    <div key={quiz.id} className="bg-white p-4 rounded-xl border border-gray-200 flex items-center justify-between hover:shadow-sm transition-shadow">
-                                        <div className="flex items-center gap-4">
-                                            <div className="bg-purple-100 p-2.5 rounded-lg text-purple-600">
+                                    <div key={quiz.id} className="bg-white p-4 rounded-xl border border-gray-200 flex flex-col sm:flex-row sm:items-center justify-between hover:shadow-sm transition-shadow gap-4">
+                                        <div className="flex items-start sm:items-center gap-4">
+                                            <div className="bg-purple-100 p-2.5 rounded-lg text-purple-600 flex-shrink-0">
                                                 <HelpCircle className="w-5 h-5" />
                                             </div>
-                                            <div>
-                                                <h4 className="font-bold text-gray-900">{quiz.title}</h4>
-                                                <div className="flex items-center gap-3 text-xs text-gray-500 mt-1">
-                                                    <span className="bg-gray-100 px-2 py-0.5 rounded text-gray-600 font-medium">{quiz.moduleTitle}</span>
+                                            <div className="min-w-0">
+                                                <h4 className="font-bold text-gray-900 break-words">{quiz.title}</h4>
+                                                <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3 text-xs text-gray-500 mt-1">
+                                                    <span className="bg-gray-100 px-2 py-0.5 rounded text-gray-600 font-medium w-fit">{quiz.moduleTitle}</span>
+                                                    <span className="hidden sm:inline">•</span>
                                                     <span>{quiz.questions?.length || 0} preguntas</span>
+                                                    <span className="hidden sm:inline">•</span>
                                                     {isClosed ? (
-                                                        <span className="bg-red-100 text-red-700 px-2 py-0.5 rounded font-medium border border-red-200">Cerrado</span>
+                                                        <span className="bg-red-100 text-red-700 px-2 py-0.5 rounded font-medium border border-red-200 w-fit">Cerrado</span>
                                                     ) : (
-                                                        <span className="bg-green-100 text-green-700 px-2 py-0.5 rounded font-medium border border-green-200">Activo</span>
+                                                        <span className="bg-green-100 text-green-700 px-2 py-0.5 rounded font-medium border border-green-200 w-fit">Activo</span>
                                                     )}
                                                 </div>
                                             </div>
                                         </div>
-                                        <div className="flex items-center gap-1">
+                                        <div className="flex items-center justify-end gap-1 border-t sm:border-t-0 pt-3 sm:pt-0 border-gray-50">
                                             <Link
                                                 href={`/teacher/courses/${courseId}/quizzes/${quiz.id}/results`}
                                                 className="text-gray-400 hover:text-green-600 p-2 hover:bg-green-50 rounded-lg transition-colors"

@@ -99,16 +99,16 @@ export default async function StudentCourseDashboard({ courseId }: { courseId: s
                                                 href={`/student/courses/${courseId}/assignments/${assignment.id}`}
                                                 className="block"
                                             >
-                                                <div className="p-4 hover:bg-orange-50/50 transition-colors flex items-center gap-4 group cursor-pointer border-l-4 border-l-transparent hover:border-l-orange-400">
-                                                    <div className="bg-orange-100 p-2.5 rounded-xl text-orange-600 group-hover:bg-orange-500 group-hover:text-white transition-all shadow-sm">
+                                                <div className="p-4 hover:bg-orange-50/50 transition-colors flex items-start sm:items-center gap-4 group cursor-pointer border-l-4 border-l-transparent hover:border-l-orange-400">
+                                                    <div className="bg-orange-100 p-2.5 rounded-xl text-orange-600 group-hover:bg-orange-500 group-hover:text-white transition-all shadow-sm flex-shrink-0">
                                                         <FileText className="w-5 h-5" />
                                                     </div>
-                                                    <div className="flex-1">
-                                                        <h4 className="font-semibold text-gray-700 group-hover:text-orange-700 transition-colors">{assignment.title}</h4>
-                                                        <div className="text-xs text-gray-500 mt-1 flex items-center gap-2">
-                                                            <span className="bg-orange-50 text-orange-600 px-1.5 py-0.5 rounded border border-orange-100">Tarea</span>
+                                                    <div className="flex-1 min-w-0">
+                                                        <h4 className="font-semibold text-gray-700 group-hover:text-orange-700 transition-colors break-words">{assignment.title}</h4>
+                                                        <div className="text-xs text-gray-500 mt-1 flex flex-col sm:flex-row sm:items-center gap-2">
+                                                            <span className="bg-orange-50 text-orange-600 px-1.5 py-0.5 rounded border border-orange-100 w-fit">Tarea</span>
                                                             {assignment.submissions?.length > 0 ? (
-                                                                <span className="bg-green-100 text-green-700 px-2 py-0.5 rounded-full font-bold flex items-center gap-1 border border-green-200 shadow-sm">
+                                                                <span className="bg-green-100 text-green-700 px-2 py-0.5 rounded-full font-bold flex items-center gap-1 border border-green-200 shadow-sm w-fit">
                                                                     <CheckCircle className="w-3 h-3" /> Entregado
                                                                 </span>
                                                             ) : (
@@ -116,7 +116,7 @@ export default async function StudentCourseDashboard({ courseId }: { courseId: s
                                                             )}
                                                         </div>
                                                     </div>
-                                                    <div className="text-orange-400">
+                                                    <div className="text-orange-400 self-center">
                                                         <ChevronRight className="w-5 h-5" />
                                                     </div>
                                                 </div>
@@ -128,33 +128,33 @@ export default async function StudentCourseDashboard({ courseId }: { courseId: s
                                                 href={`/student/courses/${courseId}/quizzes/${quiz.id}`}
                                                 className="block"
                                             >
-                                                <div className="p-4 hover:bg-purple-50/50 transition-colors flex items-center gap-4 group cursor-pointer border-l-4 border-l-transparent hover:border-l-purple-400">
-                                                    <div className="bg-purple-100 p-2.5 rounded-xl text-purple-600 group-hover:bg-purple-500 group-hover:text-white transition-all shadow-sm">
+                                                <div className="p-4 hover:bg-purple-50/50 transition-colors flex items-start sm:items-center gap-4 group cursor-pointer border-l-4 border-l-transparent hover:border-l-purple-400">
+                                                    <div className="bg-purple-100 p-2.5 rounded-xl text-purple-600 group-hover:bg-purple-500 group-hover:text-white transition-all shadow-sm flex-shrink-0">
                                                         <HelpCircle className="w-5 h-5" />
                                                     </div>
-                                                    <div className="flex-1">
-                                                        <h4 className="font-semibold text-gray-700 group-hover:text-purple-700 transition-colors">{quiz.title}</h4>
-                                                        <div className="text-xs text-gray-500 mt-1 flex items-center gap-2">
-                                                            <span className="bg-purple-50 text-purple-600 px-1.5 py-0.5 rounded border border-purple-100">Cuestionario</span>
+                                                    <div className="flex-1 min-w-0">
+                                                        <h4 className="font-semibold text-gray-700 group-hover:text-purple-700 transition-colors break-words">{quiz.title}</h4>
+                                                        <div className="text-xs text-gray-500 mt-1 flex flex-col sm:flex-row sm:items-center gap-2">
+                                                            <span className="bg-purple-50 text-purple-600 px-1.5 py-0.5 rounded border border-purple-100 w-fit">Cuestionario</span>
                                                             {quiz.attempts?.length > 0 ? (
-                                                                <span className="bg-green-100 text-green-700 px-2 py-0.5 rounded-full font-bold flex items-center gap-1 border border-green-200 shadow-sm">
+                                                                <span className="bg-green-100 text-green-700 px-2 py-0.5 rounded-full font-bold flex items-center gap-1 border border-green-200 shadow-sm w-fit">
                                                                     <CheckCircle className="w-3 h-3" /> Completado
                                                                 </span>
                                                             ) : (
-                                                                <>
+                                                                <div className="flex flex-wrap gap-2 items-center">
                                                                     {quiz.closesAt && new Date(quiz.closesAt) < new Date() ? (
-                                                                        <span className="bg-red-100 text-red-700 px-2 py-0.5 rounded font-medium border border-red-200">Cerrado</span>
+                                                                        <span className="bg-red-100 text-red-700 px-2 py-0.5 rounded font-medium border border-red-200 w-fit">Cerrado</span>
                                                                     ) : (
-                                                                        <span className="bg-green-100 text-green-700 px-2 py-0.5 rounded font-medium border border-green-200">Activo</span>
+                                                                        <span className="bg-green-100 text-green-700 px-2 py-0.5 rounded font-medium border border-green-200 w-fit">Activo</span>
                                                                     )}
                                                                     {quiz.closesAt && new Date(quiz.closesAt) >= new Date() && (
                                                                         <span>• Cierra: {new Date(quiz.closesAt).toLocaleDateString()}</span>
                                                                     )}
-                                                                </>
+                                                                </div>
                                                             )}
                                                         </div>
                                                     </div>
-                                                    <div className="opacity-0 group-hover:opacity-100 transition-opacity text-purple-400">
+                                                    <div className="opacity-0 group-hover:opacity-100 transition-opacity text-purple-400 self-center">
                                                         <ChevronRight className="w-5 h-5" />
                                                     </div>
                                                 </div>
