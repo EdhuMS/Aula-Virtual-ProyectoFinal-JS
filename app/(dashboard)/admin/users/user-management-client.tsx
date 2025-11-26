@@ -36,14 +36,19 @@ export default function UserManagementClient({ initialUsers }: { initialUsers: U
     const [createState, createFormAction] = useActionState(createUser, initialState);
     const [updateState, updateFormAction] = useActionState(updateUser, initialState);
 
-    // Necesitamos un estado separado para la acción de eliminar ya que toma un ID,
-    // pero useActionState espera una función con (prevState, formData).
-    // Envolveremos deleteUser para manejar el envío del formulario desde el modal.
-    const deleteUserAction = async (prevState: State, formData: FormData) => {
+    // Manejador directo para eliminar usuario
+    const handleDeleteUser = async (formData: FormData) => {
         const userId = formData.get("userId") as string;
-        return await deleteUser(userId);
+        const result = await deleteUser(userId);
+
+        if (result.success) {
+            setDeletingUser(null);
+            setSuccessMessage("Usuario eliminado correctamente");
+            router.refresh();
+        } else {
+            console.error(result.error);
+        }
     };
-    const [deleteState, deleteFormAction] = useActionState(deleteUserAction, initialState);
 
     const [editingUser, setEditingUser] = useState<User | null>(null);
     const [deletingUser, setDeletingUser] = useState<User | null>(null);
@@ -65,15 +70,6 @@ export default function UserManagementClient({ initialUsers }: { initialUsers: U
             router.refresh();
         }
     }, [updateState, router]);
-
-    // Manejar Éxito de Eliminación
-    useEffect(() => {
-        if (deleteState.success) {
-            setDeletingUser(null);
-            setSuccessMessage("Usuario eliminado correctamente");
-            router.refresh();
-        }
-    }, [deleteState, router]);
 
     // Manejar Éxito de Creación
     useEffect(() => {
@@ -463,7 +459,7 @@ export default function UserManagementClient({ initialUsers }: { initialUsers: U
                             </div>
                         </div>
 
-                        <form action={deleteFormAction}>
+                        <form action={handleDeleteUser}>
                             <input type="hidden" name="userId" value={deletingUser.id} />
                             <div className="flex gap-3">
                                 <button

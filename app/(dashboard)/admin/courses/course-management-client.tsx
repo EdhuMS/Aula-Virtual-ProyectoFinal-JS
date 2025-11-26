@@ -57,25 +57,24 @@ export default function CourseManagementClient({ initialCourses, teachers }: { i
     const [updateState, setUpdateState] = useState<State>(initialState);
     const [isUpdating, setIsUpdating] = useState(false);
 
-    // Envoltorio de Acción de Eliminar
-    const deleteCourseAction = async (prevState: State, formData: FormData) => {
+    // Manejador directo para eliminar curso (Imperativo para mejor control del modal)
+    const handleDeleteCourse = async (formData: FormData) => {
         const courseId = formData.get("courseId") as string;
-        return await deleteCourse(courseId);
+        const result = await deleteCourse(courseId);
+
+        if (result.success) {
+            setDeletingCourse(null);
+            setSuccessMessage("Curso eliminado correctamente");
+            router.refresh();
+        } else {
+            // Podríamos manejar el error aquí si fuera necesario
+            console.error(result.error);
+        }
     };
-    const [deleteState, deleteFormAction] = useActionState(deleteCourseAction, initialState);
 
     useEffect(() => {
         setCourses(initialCourses);
     }, [initialCourses]);
-
-    // Manejar Éxito de Eliminación
-    useEffect(() => {
-        if (deleteState.success) {
-            setDeletingCourse(null);
-            setSuccessMessage("Curso eliminado correctamente");
-            router.refresh();
-        }
-    }, [deleteState, router]);
 
     async function handleUpdateTeacher(formData: FormData) {
         setIsUpdating(true);
@@ -328,7 +327,7 @@ export default function CourseManagementClient({ initialCourses, teachers }: { i
                             </div>
                         </div>
 
-                        <form action={deleteFormAction}>
+                        <form action={handleDeleteCourse}>
                             <input type="hidden" name="courseId" value={deletingCourse.id} />
                             <div className="flex gap-3">
                                 <button
