@@ -53,7 +53,7 @@ export default function GradeSubmissionPage() {
             }
 
             if (statusRes.success) {
-                setHasPendingRequest(statusRes.hasPendingRequest);
+                setHasPendingRequest(statusRes.hasPendingRequest || false);
             }
 
             setLoading(false);
