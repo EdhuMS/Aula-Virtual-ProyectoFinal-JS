@@ -16,8 +16,8 @@ async function createAssignmentPreset() {
             name: 'aula_virtual_assignments',
             unsigned: true,
             folder: 'aula_virtual_assignments',
-            resource_type: "auto", // Allow all file types (raw, image, video, etc.)
-            transformation: [] // No transformations for raw files usually
+            resource_type: "raw", // Force RAW for all files to ensure PDFs work correctly
+            transformation: []
         });
 
         console.log("Success! Preset created:");
@@ -29,7 +29,7 @@ async function createAssignmentPreset() {
                 const updateResult = await cloudinary.api.update_upload_preset('aula_virtual_assignments', {
                     unsigned: true,
                     folder: 'aula_virtual_assignments',
-                    resource_type: "auto",
+                    resource_type: "raw", // Force RAW
                     transformation: []
                 });
                 console.log("Success! Preset updated:");
