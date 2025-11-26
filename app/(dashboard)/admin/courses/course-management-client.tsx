@@ -35,7 +35,13 @@ function SubmitButton({ text = "Guardar", loadingText = "Guardando...", variant 
     );
 }
 
-const initialState = {
+interface State {
+    success: boolean;
+    error?: string;
+    timestamp?: number;
+}
+
+const initialState: State = {
     success: false,
     error: "",
 };
@@ -46,11 +52,11 @@ export default function CourseManagementClient({ initialCourses, teachers }: { i
     const [deletingCourse, setDeletingCourse] = useState<any>(null);
     const [successMessage, setSuccessMessage] = useState("");
 
-    const [updateState, setUpdateState] = useState(initialState);
+    const [updateState, setUpdateState] = useState<State>(initialState);
     const [isUpdating, setIsUpdating] = useState(false);
 
     // Envoltorio de Acción de Eliminar
-    const deleteCourseAction = async (prevState: any, formData: FormData) => {
+    const deleteCourseAction = async (prevState: State, formData: FormData) => {
         const courseId = formData.get("courseId") as string;
         return await deleteCourse(courseId);
     };

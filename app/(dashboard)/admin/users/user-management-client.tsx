@@ -15,7 +15,13 @@ interface User {
     createdAt: Date;
 }
 
-const initialState = {
+interface State {
+    success: boolean;
+    error?: string;
+    timestamp?: number;
+}
+
+const initialState: State = {
     success: false,
     error: "",
 };
@@ -31,7 +37,7 @@ export default function UserManagementClient({ initialUsers }: { initialUsers: U
     // Necesitamos un estado separado para la acción de eliminar ya que toma un ID,
     // pero useActionState espera una función con (prevState, formData).
     // Envolveremos deleteUser para manejar el envío del formulario desde el modal.
-    const deleteUserAction = async (prevState: any, formData: FormData) => {
+    const deleteUserAction = async (prevState: State, formData: FormData) => {
         const userId = formData.get("userId") as string;
         return await deleteUser(userId);
     };
@@ -63,14 +69,14 @@ export default function UserManagementClient({ initialUsers }: { initialUsers: U
             setDeletingUser(null);
             setSuccessMessage("Usuario eliminado correctamente");
         }
-    }, [deleteState.success]);
+    }, [deleteState]);
 
     // Manejar Éxito de Creación
     useEffect(() => {
         if (createState.success) {
             setSuccessMessage("Usuario creado correctamente");
         }
-    }, [createState.success]);
+    }, [createState]);
 
 
     // Lógica de filtrado

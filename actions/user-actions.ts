@@ -66,9 +66,9 @@ export async function createUser(prevState: any, formData: FormData) {
         });
 
         revalidatePath("/admin/users");
-        return { success: true };
+        return { success: true, timestamp: Date.now() };
     } catch (error) {
-        return { success: false, error: "Failed to create user" };
+        return { success: false, error: "Failed to create user", timestamp: Date.now() };
     }
 }
 
@@ -80,9 +80,9 @@ export async function updateUserRole(userId: string, newRole: Role) {
             data: { role: newRole },
         });
         revalidatePath("/admin/users");
-        return { success: true };
+        return { success: true, timestamp: Date.now() };
     } catch (error) {
-        return { success: false, error: "Failed to update user role" };
+        return { success: false, error: "Failed to update user role", timestamp: Date.now() };
     }
 }
 
@@ -95,16 +95,16 @@ export async function deleteUser(userId: string) {
         });
 
         if (userToDelete?.email === "admin@aulavirtual.com") {
-            return { success: false, error: "Cannot delete the Super Admin" };
+            return { success: false, error: "Cannot delete the Super Admin", timestamp: Date.now() };
         }
 
         await prisma.user.delete({
             where: { id: userId },
         });
         revalidatePath("/admin/users");
-        return { success: true };
+        return { success: true, timestamp: Date.now() };
     } catch (error) {
-        return { success: false, error: "Failed to delete user" };
+        return { success: false, error: "Failed to delete user", timestamp: Date.now() };
     }
 }
 
@@ -131,7 +131,7 @@ export async function updateUser(prevState: any, formData: FormData) {
     const password = formData.get("password") as string;
 
     if (!userId || !name || !email || !role) {
-        return { success: false, error: "Missing required fields" };
+        return { success: false, error: "Missing required fields", timestamp: Date.now() };
     }
 
     try {
@@ -151,8 +151,8 @@ export async function updateUser(prevState: any, formData: FormData) {
         });
 
         revalidatePath("/admin/users");
-        return { success: true };
+        return { success: true, timestamp: Date.now() };
     } catch (error) {
-        return { success: false, error: "Failed to update user" };
+        return { success: false, error: "Failed to update user", timestamp: Date.now() };
     }
 }
