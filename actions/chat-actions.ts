@@ -20,12 +20,16 @@ export async function getConversations() {
         const conversations = await prisma.conversation.findMany({
             where: {
                 participants: {
-                    some: { id: user.id }
+                    some: { userId: user.id }
                 }
             },
             include: {
                 participants: {
-                    select: { id: true, name: true, image: true, email: true, role: true }
+                    include: {
+                        user: {
+                            select: { id: true, name: true, image: true, email: true, role: true }
+                        }
+                    }
                 },
                 messages: {
                     orderBy: { createdAt: 'desc' },
@@ -35,7 +39,13 @@ export async function getConversations() {
             orderBy: { updatedAt: 'desc' }
         });
 
-        return { success: true, data: conversations };
+        // Transform data to match expected frontend structure
+        const formattedConversations = conversations.map(conv => ({
+            ...conv,
+            participants: conv.participants.map(p => p.user)
+        }));
+
+        return { success: true, data: formattedConversations };
     } catch (error) {
         console.error("Error fetching conversations:", error);
         return { success: false, error: "Failed to fetch conversations" };
@@ -124,8 +134,8 @@ export async function createConversation(participantId: string) {
         const existing = await prisma.conversation.findFirst({
             where: {
                 AND: [
-                    { participants: { some: { id: user.id } } },
-                    { participants: { some: { id: participantId } } }
+                    { participants: { some: { userId: user.id } } },
+                    { participants: { some: { userId: participantId } } }
                 ]
             }
         });
@@ -137,16 +147,31 @@ export async function createConversation(participantId: string) {
         const conversation = await prisma.conversation.create({
             data: {
                 participants: {
-                    connect: [
-                        { id: user.id },
-                        { id: participantId }
+                    create: [
+                        { userId: user.id },
+                        { userId: participantId }
                     ]
                 }
+            },
+            include: {
+                participants: {
+                    include: {
+                        user: {
+                            select: { id: true, name: true, image: true, email: true, role: true }
+                        }
+                    }
+                },
+                messages: true
             }
         });
 
+        const formattedConversation = {
+            ...conversation,
+            participants: conversation.participants.map(p => p.user)
+        };
+
         revalidatePath("/chat");
-        return { success: true, data: conversation };
+        return { success: true, data: formattedConversation };
     } catch (error) {
         console.error("Error creating conversation:", error);
         return { success: false, error: "Failed to create conversation" };
@@ -188,7 +213,7 @@ export async function getUnreadMessageCount() {
     try {
         const conversations = await prisma.conversation.findMany({
             where: {
-                participants: { some: { id: user.id } }
+                participants: { some: { userId: user.id } }
             },
             select: { id: true, clearedAt: true }
         });
