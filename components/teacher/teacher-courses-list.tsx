@@ -4,6 +4,7 @@ import { BookOpen, Users, ArrowRight } from "lucide-react";
 interface Course {
     id: string;
     title: string;
+    code: string;
     description: string | null;
     _count: {
         modules: number;
@@ -31,8 +32,13 @@ export default function TeacherCoursesList({ courses }: { courses: Course[] }) {
             {courses.map((course) => (
                 <div key={course.id} className="bg-white rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 border border-gray-100 overflow-hidden flex flex-col h-full group">
                     <div className="h-40 bg-gradient-to-r from-slate-800 to-slate-900 relative p-6 flex flex-col justify-end">
-                        <h2 className="text-xl font-bold text-white mb-1">{course.title}</h2>
-                        <div className="w-12 h-1 bg-blue-500 rounded-full"></div>
+                        <div className="flex justify-between items-start mb-1">
+                            <h2 className="text-xl font-bold text-white leading-tight">{course.title}</h2>
+                            <span className="text-xs bg-white/20 text-white px-2 py-1 rounded-md border border-white/30 font-mono shrink-0 ml-2">
+                                {course.code}
+                            </span>
+                        </div>
+                        <div className="w-12 h-1 bg-blue-500 rounded-full mt-auto"></div>
                     </div>
 
                     <div className="p-6 flex-1 flex flex-col">

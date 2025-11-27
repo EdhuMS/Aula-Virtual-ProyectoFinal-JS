@@ -1,10 +1,10 @@
 "use client";
 
 import { useState, useActionState, useEffect } from "react";
-import { deleteCourse, updateCourseTeacher } from "@/actions/course-actions";
+import { deleteCourse, updateCourse } from "@/actions/course-actions";
 import NextLink from "next/link";
 import { useRouter } from "next/navigation";
-import { Plus, Trash2, BookOpen, Users, Pencil, X, Loader2, User, AlertTriangle, CheckCircle } from "lucide-react";
+import { Plus, Trash2, BookOpen, Users, Pencil, X, Loader2, User, AlertTriangle, CheckCircle, FileText, Tag } from "lucide-react";
 import { useFormStatus } from "react-dom";
 import { Modal } from "@/components/ui/modal";
 
@@ -76,18 +76,16 @@ export default function CourseManagementClient({ initialCourses, teachers }: { i
         setCourses(initialCourses);
     }, [initialCourses]);
 
-    async function handleUpdateTeacher(formData: FormData) {
+    async function handleUpdateCourse(formData: FormData) {
         setIsUpdating(true);
-        const courseId = formData.get("courseId") as string;
-        const teacherId = formData.get("teacherId") as string;
 
-        const result = await updateCourseTeacher(courseId, teacherId);
+        const result = await updateCourse(null, formData);
         setUpdateState({ ...result, error: result.error || "" });
         setIsUpdating(false);
 
         if (result.success) {
             setEditingCourse(null);
-            setSuccessMessage("Profesor reasignado correctamente");
+            setSuccessMessage("Curso actualizado correctamente");
         }
     }
 
@@ -128,7 +126,12 @@ export default function CourseManagementClient({ initialCourses, teachers }: { i
                                                 <BookOpen className="w-6 h-6" />
                                             </div>
                                             <div className="ml-4">
-                                                <div className="text-sm font-bold text-gray-900">{course.title}</div>
+                                                <div className="text-sm font-bold text-gray-900 flex items-center gap-2">
+                                                    {course.title}
+                                                    <span className="px-2 py-0.5 rounded-md bg-gray-100 text-gray-600 text-xs font-mono border border-gray-200">
+                                                        {course.code}
+                                                    </span>
+                                                </div>
                                                 <div className="text-sm text-gray-500 truncate max-w-xs">{course.description}</div>
                                             </div>
                                         </div>
@@ -154,7 +157,7 @@ export default function CourseManagementClient({ initialCourses, teachers }: { i
                                             <button
                                                 onClick={() => setEditingCourse(course)}
                                                 className="text-gray-400 hover:text-blue-600 p-2 hover:bg-blue-50 rounded-lg transition-colors"
-                                                title="Reasignar Profesor"
+                                                title="Editar Curso"
                                             >
                                                 <Pencil className="w-5 h-5" />
                                             </button>
@@ -208,7 +211,12 @@ export default function CourseManagementClient({ initialCourses, teachers }: { i
                                     <BookOpen className="w-6 h-6" />
                                 </div>
                                 <div className="flex-1 min-w-0">
-                                    <div className="text-sm font-bold text-gray-900 truncate">{course.title}</div>
+                                    <div className="text-sm font-bold text-gray-900 truncate flex items-center gap-2">
+                                        {course.title}
+                                        <span className="px-2 py-0.5 rounded-md bg-gray-100 text-gray-600 text-xs font-mono border border-gray-200 shrink-0">
+                                            {course.code}
+                                        </span>
+                                    </div>
                                     <div className="text-xs text-gray-500 line-clamp-2">{course.description}</div>
                                 </div>
                             </div>
@@ -250,19 +258,57 @@ export default function CourseManagementClient({ initialCourses, teachers }: { i
                 )}
             </div>
 
-            {/* Modal para Editar Profesor del Curso */}
+            {/* Modal para Editar Curso */}
             {editingCourse && (
                 <Modal
                     isOpen={true}
                     onClose={() => setEditingCourse(null)}
-                    title="Reasignar Profesor"
+                    title="Editar Curso"
                 >
-                    <form action={handleUpdateTeacher} className="space-y-4">
+                    <form action={handleUpdateCourse} className="space-y-4 max-h-[80vh] overflow-y-auto px-1">
                         <input type="hidden" name="courseId" value={editingCourse.id} />
 
-                        <div className="p-4 bg-blue-50 rounded-xl border border-blue-100 mb-4">
-                            <div className="text-xs font-semibold text-blue-600 uppercase tracking-wide mb-1">Curso</div>
-                            <div className="font-bold text-blue-900">{editingCourse.title}</div>
+                        <div className="space-y-1">
+                            <label className="text-xs font-semibold text-gray-500 uppercase tracking-wide ml-1">Título</label>
+                            <div className="relative">
+                                <BookOpen className="w-4 h-4 absolute left-3 top-3 text-gray-400" />
+                                <input
+                                    name="title"
+                                    defaultValue={editingCourse.title}
+                                    required
+                                    className="w-full pl-9 pr-4 py-2.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all text-sm"
+                                    placeholder="Nombre del curso"
+                                />
+                            </div>
+                        </div>
+
+                        <div className="space-y-1">
+                            <label className="text-xs font-semibold text-gray-500 uppercase tracking-wide ml-1">Código</label>
+                            <div className="relative">
+                                <Tag className="w-4 h-4 absolute left-3 top-3 text-gray-400" />
+                                <input
+                                    name="code"
+                                    defaultValue={editingCourse.code}
+                                    required
+                                    className="w-full pl-9 pr-4 py-2.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all text-sm font-mono"
+                                    placeholder="Ej: MAT-101"
+                                />
+                            </div>
+                        </div>
+
+                        <div className="space-y-1">
+                            <label className="text-xs font-semibold text-gray-500 uppercase tracking-wide ml-1">Descripción</label>
+                            <div className="relative">
+                                <FileText className="w-4 h-4 absolute left-3 top-3 text-gray-400" />
+                                <textarea
+                                    name="description"
+                                    defaultValue={editingCourse.description}
+                                    required
+                                    rows={3}
+                                    className="w-full pl-9 pr-4 py-2.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all text-sm resize-none"
+                                    placeholder="Descripción del curso"
+                                />
+                            </div>
                         </div>
 
                         <div className="space-y-1">

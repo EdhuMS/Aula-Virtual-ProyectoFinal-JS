@@ -6,6 +6,8 @@ import { Trash2, UserPlus, Search, UserCheck, Mail, AlertTriangle, CheckCircle }
 import { useRouter } from "next/navigation";
 import { Modal } from "@/components/ui/modal";
 
+import { SearchableSelect } from "@/components/ui/searchable-select";
+
 export default function EnrollmentManager({
     courseId,
     enrolledStudents,
@@ -16,7 +18,6 @@ export default function EnrollmentManager({
     availableStudents: any[]
 }) {
     const [selectedStudentId, setSelectedStudentId] = useState("");
-    const [searchTerm, setSearchTerm] = useState("");
     const router = useRouter();
     const [isLoading, setIsLoading] = useState(false);
 
@@ -54,11 +55,6 @@ export default function EnrollmentManager({
         }
     };
 
-    const filteredAvailableStudents = availableStudents.filter(student =>
-        student.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        student.email.toLowerCase().includes(searchTerm.toLowerCase())
-    );
-
     return (
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             {/* Enrollment Form */}
@@ -72,40 +68,21 @@ export default function EnrollmentManager({
                     </h2>
 
                     <div className="space-y-6">
-                        <div className="space-y-2">
-                            <label className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Buscar</label>
-                            <div className="relative">
-                                <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-4 h-4" />
-                                <input
-                                    type="text"
-                                    placeholder="Buscar por nombre o email..."
-                                    value={searchTerm}
-                                    onChange={(e) => setSearchTerm(e.target.value)}
-                                    className="w-full pl-9 pr-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"
-                                />
-                            </div>
-                        </div>
-
                         <form onSubmit={handleEnroll} className="space-y-6">
                             <div className="space-y-2">
-                                <label className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Seleccionar</label>
-                                <select
+                                <label className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Seleccionar Estudiante</label>
+                                <SearchableSelect
+                                    options={availableStudents.map(student => ({
+                                        id: student.id,
+                                        label: student.name,
+                                        subLabel: student.email
+                                    }))}
                                     value={selectedStudentId}
-                                    onChange={(e) => setSelectedStudentId(e.target.value)}
-                                    className="w-full px-3 py-2.5 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white transition-all"
-                                    required
-                                >
-                                    <option value="">-- Elegir estudiante --</option>
-                                    {filteredAvailableStudents.length === 0 ? (
-                                        <option disabled>No se encontraron estudiantes</option>
-                                    ) : (
-                                        filteredAvailableStudents.map(student => (
-                                            <option key={student.id} value={student.id}>
-                                                {student.name}
-                                            </option>
-                                        ))
-                                    )}
-                                </select>
+                                    onChange={setSelectedStudentId}
+                                    placeholder="-- Elegir estudiante --"
+                                    searchPlaceholder="Buscar por nombre o email..."
+                                    emptyMessage="No se encontraron estudiantes"
+                                />
                             </div>
 
                             <button

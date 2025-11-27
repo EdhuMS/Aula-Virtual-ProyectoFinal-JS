@@ -4,6 +4,7 @@ import { BookOpen, User } from "lucide-react";
 interface Course {
     id: string;
     title: string;
+    code: string;
     description: string | null;
     teacher: {
         name: string | null;
@@ -39,8 +40,8 @@ export default function StudentCoursesList({ courses }: { courses: Course[] }) {
                     <div className="h-48 bg-gradient-to-br from-blue-500 to-indigo-600 relative overflow-hidden">
                         <div className="absolute inset-0 bg-black/10 group-hover:bg-black/0 transition-colors" />
                         <div className="absolute bottom-4 left-4 right-4">
-                            <span className="inline-block px-3 py-1 bg-white/20 backdrop-blur-md rounded-full text-xs font-medium text-white mb-2 border border-white/30">
-                                Curso
+                            <span className="inline-block px-3 py-1 bg-white/20 backdrop-blur-md rounded-full text-xs font-medium text-white mb-2 border border-white/30 font-mono">
+                                {course.code}
                             </span>
                             <h2 className="text-xl font-bold text-white line-clamp-2 leading-tight">
                                 {course.title}

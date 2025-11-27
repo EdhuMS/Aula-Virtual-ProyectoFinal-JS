@@ -39,6 +39,7 @@ model User {
 model Course {
   id          String   @id @default(cuid())
   title       String
+  code        String   @unique // Código único del curso (ej: MAT-101)
   description String   @db.Text
   imageUrl    String? // Imagen de portada opcional
   teacherId   String

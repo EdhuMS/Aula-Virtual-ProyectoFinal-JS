@@ -9,7 +9,7 @@ import { revalidatePath } from "next/cache";
 async function checkTeacher() {
     const session = await getServerSession(authOptions);
     if (!session || session.user.role !== "TEACHER") {
-        throw new Error("Unauthorized: Teacher access required");
+        throw new Error("No autorizado: Se requiere acceso de profesor");
     }
     return session;
 }
@@ -28,8 +28,8 @@ export async function getTeacherCourses() {
         });
         return { success: true, data: courses };
     } catch (error) {
-        console.error("Failed to fetch courses:", error);
-        return { success: false, error: "Failed to fetch courses" };
+        console.error("Error al obtener cursos:", error);
+        return { success: false, error: "Error al obtener los cursos" };
     }
 }
 
@@ -37,7 +37,7 @@ export async function getTeacherCourses() {
 async function checkAdmin() {
     const session = await getServerSession(authOptions);
     if (!session || session.user.role !== "ADMIN") {
-        throw new Error("Unauthorized: Admin access required");
+        throw new Error("No autorizado: Se requiere acceso de administrador");
     }
     return session;
 }
@@ -54,7 +54,7 @@ export async function getAllCourses() {
         });
         return { success: true, data: courses };
     } catch (error) {
-        return { success: false, error: "Failed to fetch courses" };
+        return { success: false, error: "Error al obtener los cursos" };
     }
 }
 
@@ -62,17 +62,19 @@ export async function createCourse(prevState: any, formData: FormData) {
     await checkAdmin();
 
     const title = formData.get("title") as string;
+    const code = formData.get("code") as string;
     const description = formData.get("description") as string;
     const teacherId = formData.get("teacherId") as string;
 
-    if (!title || !description || !teacherId) {
-        return { success: false, error: "Missing required fields" };
+    if (!title || !code || !description || !teacherId) {
+        return { success: false, error: "Faltan campos requeridos" };
     }
 
     try {
         await prisma.course.create({
             data: {
                 title,
+                code,
                 description,
                 teacherId,
             },
@@ -80,9 +82,12 @@ export async function createCourse(prevState: any, formData: FormData) {
 
         revalidatePath("/admin/courses");
         return { success: true };
-    } catch (error) {
-        console.error("Failed to create course:", error);
-        return { success: false, error: "Failed to create course" };
+    } catch (error: any) {
+        console.error("Error al crear curso:", error);
+        if (error.code === 'P2002' && error.meta?.target?.includes('code')) {
+            return { success: false, error: "El código del curso ya existe" };
+        }
+        return { success: false, error: "Error al crear el curso" };
     }
 }
 
@@ -95,14 +100,14 @@ export async function deleteCourse(courseId: string) {
         revalidatePath("/admin/courses");
         return { success: true, timestamp: Date.now() + Math.random() };
     } catch (error) {
-        return { success: false, error: "Failed to delete course", timestamp: Date.now() + Math.random() };
+        return { success: false, error: "Error al eliminar el curso", timestamp: Date.now() + Math.random() };
     }
 }
 
 export async function getStudentCourses() {
     const session = await getServerSession(authOptions);
     if (!session || session.user.role !== "STUDENT") {
-        throw new Error("Unauthorized");
+        throw new Error("No autorizado");
     }
 
     try {
@@ -122,14 +127,14 @@ export async function getStudentCourses() {
         const courses = enrollments.map(enrollment => enrollment.course);
         return { success: true, data: courses };
     } catch (error) {
-        return { success: false, error: "Failed to fetch courses" };
+        return { success: false, error: "Error al obtener los cursos" };
     }
 }
 
 export async function getCourseById(courseId: string) {
     const session = await getServerSession(authOptions);
     if (!session) {
-        return { success: false, error: "Unauthorized" };
+        return { success: false, error: "No autorizado" };
     }
 
     try {
@@ -142,26 +147,40 @@ export async function getCourseById(courseId: string) {
         });
         return { success: true, data: course };
     } catch (error) {
-        return { success: false, error: "Failed to fetch course" };
+        return { success: false, error: "Error al obtener el curso" };
     }
 }
-export async function updateCourseTeacher(courseId: string, teacherId: string) {
+export async function updateCourse(prevState: any, formData: FormData) {
     await checkAdmin();
 
-    if (!courseId || !teacherId) {
-        return { success: false, error: "Missing required fields" };
+    const courseId = formData.get("courseId") as string;
+    const title = formData.get("title") as string;
+    const code = formData.get("code") as string;
+    const description = formData.get("description") as string;
+    const teacherId = formData.get("teacherId") as string;
+
+    if (!courseId || !title || !code || !description || !teacherId) {
+        return { success: false, error: "Faltan campos requeridos" };
     }
 
     try {
         await prisma.course.update({
             where: { id: courseId },
-            data: { teacherId },
+            data: {
+                title,
+                code,
+                description,
+                teacherId,
+            },
         });
 
         revalidatePath("/admin/courses");
         return { success: true, timestamp: Date.now() + Math.random() };
-    } catch (error) {
-        console.error("Failed to update course teacher:", error);
-        return { success: false, error: "Failed to update course teacher", timestamp: Date.now() + Math.random() };
+    } catch (error: any) {
+        console.error("Failed to update course:", error);
+        if (error.code === 'P2002' && error.meta?.target?.includes('code')) {
+            return { success: false, error: "El código del curso ya existe", timestamp: Date.now() + Math.random() };
+        }
+        return { success: false, error: "Error al actualizar el curso", timestamp: Date.now() + Math.random() };
     }
 }

@@ -37,26 +37,26 @@ export default async function StudentAssignmentsPage({ params }: { params: Promi
                         <Link
                             key={assignment.id}
                             href={`/student/courses/${courseId}/assignments/${assignment.id}`}
-                            className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 flex items-center justify-between hover:shadow-md hover:border-blue-200 transition-all group"
+                            className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 flex flex-col md:flex-row md:items-center justify-between hover:shadow-md hover:border-blue-200 transition-all group gap-4"
                         >
                             <div className="flex items-start gap-4">
-                                <div className="bg-blue-50 p-3 rounded-xl text-blue-600 group-hover:bg-blue-100 transition-colors">
+                                <div className="bg-blue-50 p-3 rounded-xl text-blue-600 group-hover:bg-blue-100 transition-colors shrink-0">
                                     <FileText className="w-6 h-6" />
                                 </div>
                                 <div>
-                                    <h3 className="font-bold text-gray-900 text-lg group-hover:text-blue-600 transition-colors">{assignment.title}</h3>
-                                    <div className="flex items-center gap-4 mt-2 text-sm text-gray-500">
+                                    <h3 className="font-bold text-gray-900 text-lg group-hover:text-blue-600 transition-colors line-clamp-2">{assignment.title}</h3>
+                                    <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 mt-2 text-sm text-gray-500">
                                         <span className="flex items-center gap-1">
-                                            <Calendar className="w-4 h-4" />
+                                            <Calendar className="w-4 h-4 shrink-0" />
                                             Vence: {new Date(assignment.dueDate).toLocaleDateString()}
                                         </span>
-                                        <span className="bg-gray-100 px-2 py-0.5 rounded text-xs font-medium">
+                                        <span className="bg-gray-100 px-2 py-0.5 rounded text-xs font-medium self-start sm:self-auto">
                                             Módulo: {assignment.module.title}
                                         </span>
                                     </div>
                                 </div>
                             </div>
-                            <div className="flex items-center gap-2 text-blue-600 font-medium text-sm">
+                            <div className="flex items-center gap-2 text-blue-600 font-medium text-sm self-end md:self-auto">
                                 Ver Detalles <ArrowLeft className="w-4 h-4 rotate-180" />
                             </div>
                         </Link>

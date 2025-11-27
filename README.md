@@ -11,9 +11,11 @@ Aula Virtual es una plataforma educativa moderna y completa diseñada para facil
 
 ### 📚 Gestión Académica
 - **Estructura de Cursos**: Organización jerárquica en Módulos -> Lecciones / Tareas / Exámenes.
+- **Identificadores de Curso**: Código único para cada curso (ej. WEB-101) para fácil identificación.
 - **Contenido Rico**: Soporte para lecciones con contenido multimedia y texto enriquecido.
 - **Tareas**: Sistema de entrega de archivos (PDF, imágenes) con comentarios.
 - **Exámenes**: Cuestionarios de opción múltiple con calificación automática y límites de tiempo.
+- **Inscripciones**: Búsqueda inteligente y filtrado para inscribir estudiantes rápidamente.
 
 ### 💬 Comunicación y Notificaciones
 - **Chat en Tiempo Real**: Mensajería instantánea entre estudiantes y profesores.

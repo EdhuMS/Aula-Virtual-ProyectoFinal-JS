@@ -5,7 +5,7 @@ import { hash } from 'bcryptjs'
 const prisma = new PrismaClient()
 
 async function main() {
-    console.log('Start seeding ...')
+    console.log('Iniciando carga de datos...')
     const password = await hash('123456', 12)
 
     // 1. Crear Administrador
@@ -20,7 +20,7 @@ async function main() {
             image: 'https://ui-avatars.com/api/?name=Admin&background=0D8ABC&color=fff'
         },
     })
-    console.log('Created Admin:', admin.name)
+    console.log('Administrador creado:', admin.name)
 
     // 2. Crear Profesores
     const teachersData = [
@@ -42,7 +42,7 @@ async function main() {
             },
         })
         teachers.push(teacher)
-        console.log('Created Teacher:', teacher.name)
+        console.log('Profesor creado:', teacher.name)
     }
 
     // 3. Crear Estudiantes
@@ -63,19 +63,21 @@ async function main() {
             },
         })
         students.push(student)
-        console.log('Created Student:', student.name)
+        console.log('Estudiante creado:', student.name)
     }
 
     // 4. Crear Cursos
     const coursesData = [
         {
             title: 'Desarrollo Web Full Stack',
+            code: 'WEB-101',
             description: 'Domina el desarrollo web moderno desde cero hasta experto. Aprende React, Node.js, Next.js y bases de datos.',
             teacher: teachers[0],
             image: 'https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=1200&q=80'
         },
         {
             title: 'Inteligencia Artificial Básica',
+            code: 'AI-101',
             description: 'Introducción a los conceptos fundamentales de IA, Machine Learning y Redes Neuronales.',
             teacher: teachers[1],
             image: 'https://images.unsplash.com/photo-1677442136019-21780ecad995?auto=format&fit=crop&w=1200&q=80'
@@ -86,12 +88,13 @@ async function main() {
         const course = await prisma.course.create({
             data: {
                 title: c.title,
+                code: c.code,
                 description: c.description,
                 teacherId: c.teacher.id,
                 imageUrl: c.image,
             }
         })
-        console.log('Created Course:', course.title)
+        console.log('Curso creado:', course.title)
 
         // Inscribir a todos los estudiantes
         for (const student of students) {
@@ -166,7 +169,7 @@ async function main() {
         }
     }
 
-    console.log('Seeding finished.')
+    console.log('Carga de datos finalizada.')
 }
 
 main()

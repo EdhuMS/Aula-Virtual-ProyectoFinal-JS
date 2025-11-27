@@ -54,7 +54,7 @@ e:/UTP/CICLO 6/JavaScript Avanzado/Aula Virtual/
 │   └── api/                # Route Handlers (solo para Auth y Webhooks si fuera necesario)
 │
 ├── components/             # Componentes de UI
-│   ├── ui/                 # Componentes base (Botones, Modales, Inputs) - Design System
+│   ├── ui/                 # Componentes base (Botones, Modales, Inputs, SearchableSelect) - Design System
 │   ├── student/            # Componentes específicos de vista estudiante
 │   ├── teacher/            # Componentes específicos de vista profesor
 │   └── ...

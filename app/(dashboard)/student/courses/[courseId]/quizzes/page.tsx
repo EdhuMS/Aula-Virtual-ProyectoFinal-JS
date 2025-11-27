@@ -72,25 +72,25 @@ export default function StudentQuizzesPage({ params }: { params: Promise<{ cours
                                         <div className="border border-gray-200 rounded-xl p-6 hover:shadow-md transition-all hover:border-purple-300 bg-white relative overflow-hidden">
                                             <div className="absolute top-0 left-0 w-1 h-full bg-purple-500 opacity-100" />
 
-                                            <div className="flex items-center justify-between">
-                                                <div className="flex items-center gap-4">
-                                                    <div className={`p-3 rounded-xl ${isCompleted ? 'bg-green-100 text-green-600' : 'bg-purple-50 text-purple-600'}`}>
+                                            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                                                <div className="flex items-start gap-4">
+                                                    <div className={`p-3 rounded-xl shrink-0 ${isCompleted ? 'bg-green-100 text-green-600' : 'bg-purple-50 text-purple-600'}`}>
                                                         {isCompleted ? <CheckCircle className="w-6 h-6" /> : <HelpCircle className="w-6 h-6" />}
                                                     </div>
                                                     <div>
-                                                        <h3 className="font-bold text-gray-900 text-lg group-hover:text-purple-700 transition-colors">
+                                                        <h3 className="font-bold text-gray-900 text-lg group-hover:text-purple-700 transition-colors line-clamp-2">
                                                             {quiz.title}
                                                         </h3>
-                                                        <div className="flex items-center gap-4 mt-1 text-sm">
+                                                        <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 mt-1 text-sm">
                                                             {isCompleted ? (
-                                                                <span className="text-green-600 font-bold bg-green-50 px-2 py-0.5 rounded-lg">
+                                                                <span className="text-green-600 font-bold bg-green-50 px-2 py-0.5 rounded-lg self-start">
                                                                     Calificación: {attempt.score} / 20
                                                                 </span>
                                                             ) : (
                                                                 <>
                                                                     {isClosed ? (
-                                                                        <div className="flex items-center gap-2">
-                                                                            <span className="text-red-500 flex items-center gap-1 bg-red-50 px-2 py-0.5 rounded-lg font-bold">
+                                                                        <div className="flex flex-col sm:flex-row sm:items-center gap-2">
+                                                                            <span className="text-red-500 flex items-center gap-1 bg-red-50 px-2 py-0.5 rounded-lg font-bold self-start">
                                                                                 NS (0 pts)
                                                                             </span>
                                                                             <span className="text-gray-500 text-xs">
@@ -98,12 +98,12 @@ export default function StudentQuizzesPage({ params }: { params: Promise<{ cours
                                                                             </span>
                                                                         </div>
                                                                     ) : (
-                                                                        <span className="text-green-600 flex items-center gap-1 bg-green-50 px-2 py-0.5 rounded-lg">
+                                                                        <span className="text-green-600 flex items-center gap-1 bg-green-50 px-2 py-0.5 rounded-lg self-start">
                                                                             <Clock className="w-3 h-3" /> Disponible
                                                                         </span>
                                                                     )}
                                                                     {closesAt && !isClosed && (
-                                                                        <span className="text-gray-500">
+                                                                        <span className="text-gray-500 text-xs sm:text-sm">
                                                                             Cierra: {closesAt.toLocaleDateString()} {closesAt.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                                                                         </span>
                                                                     )}
@@ -113,7 +113,7 @@ export default function StudentQuizzesPage({ params }: { params: Promise<{ cours
                                                     </div>
                                                 </div>
 
-                                                <div className="text-gray-300 group-hover:text-purple-500 transition-colors">
+                                                <div className="text-gray-300 group-hover:text-purple-500 transition-colors self-end md:self-center">
                                                     <ChevronRight className="w-6 h-6" />
                                                 </div>
                                             </div>
