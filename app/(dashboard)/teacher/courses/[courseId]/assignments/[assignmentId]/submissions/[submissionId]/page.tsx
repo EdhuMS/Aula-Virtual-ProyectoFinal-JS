@@ -6,8 +6,10 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { ArrowLeft, Save, User, FileText, ExternalLink, Calendar, AlertTriangle, Lock, Unlock } from "lucide-react";
 import { Modal } from "@/components/ui/modal";
+import { getDownloadUrl } from "@/lib/utils";
 
 export default function GradeSubmissionPage() {
+
     const params = useParams();
     const courseId = params.courseId as string;
     const assignmentId = params.assignmentId as string;
@@ -166,7 +168,7 @@ export default function GradeSubmissionPage() {
                                                 </div>
                                             </div>
                                             <a
-                                                href={url}
+                                                href={getDownloadUrl(url)}
                                                 target="_blank"
                                                 rel="noopener noreferrer"
                                                 className="text-blue-600 hover:text-blue-700 font-bold text-sm hover:underline whitespace-nowrap px-4"

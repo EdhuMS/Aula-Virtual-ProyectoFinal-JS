@@ -6,9 +6,11 @@ import { ArrowLeft, Calendar, FileText, Upload, CheckCircle, AlertCircle, Clock,
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { CldUploadButton } from "next-cloudinary";
+import { getDownloadUrl } from "@/lib/utils";
 import { Modal } from "@/components/ui/modal";
 
 export default function AssignmentDetailsPage({ params }: { params: Promise<{ courseId: string; assignmentId: string }> }) {
+
     const [assignment, setAssignment] = useState<any>(null);
     const [submission, setSubmission] = useState<any>(null);
     const [loading, setLoading] = useState(true);
@@ -231,7 +233,7 @@ export default function AssignmentDetailsPage({ params }: { params: Promise<{ co
                                                 <div key={index} className="bg-blue-50 border border-blue-100 rounded-lg p-3 flex items-center justify-between">
                                                     <div className="flex items-center gap-2 overflow-hidden">
                                                         <FileText className="w-4 h-4 text-blue-600 flex-shrink-0" />
-                                                        <a href={url} target="_blank" rel="noopener noreferrer" className="text-xs text-blue-700 hover:underline truncate">
+                                                        <a href={getDownloadUrl(url)} target="_blank" rel="noopener noreferrer" className="text-xs text-blue-700 hover:underline truncate">
                                                             Archivo {index + 1}
                                                         </a>
                                                     </div>
