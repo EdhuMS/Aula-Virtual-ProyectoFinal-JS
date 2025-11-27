@@ -210,7 +210,7 @@ export default function AssignmentDetailsPage({ params }: { params: Promise<{ co
                                                 uploadPreset="aula_virtual_assignments_raw"
                                                 options={{
                                                     maxFiles: 5 - fileUrls.length,
-                                                    resourceType: "raw",
+                                                    resourceType: "auto",
                                                     clientAllowedFormats: ["pdf", "doc", "docx", "xls", "xlsx", "ppt", "pptx", "zip", "rar", "txt", "jpg", "png", "jpeg"],
                                                     multiple: true
                                                 }}
