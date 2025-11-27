@@ -205,7 +205,7 @@ export default function AssignmentDetailsPage({ params }: { params: Promise<{ co
                                     {fileUrls.length < 5 && (
                                         <div className="border-2 border-dashed border-gray-300 rounded-xl p-6 text-center hover:bg-gray-50 transition-colors mb-4">
                                             <CldUploadButton
-                                                uploadPreset="aula_virtual_assignments"
+                                                uploadPreset="aula_virtual_assignments_raw"
                                                 options={{
                                                     maxFiles: 5 - fileUrls.length,
                                                     resourceType: "raw",
