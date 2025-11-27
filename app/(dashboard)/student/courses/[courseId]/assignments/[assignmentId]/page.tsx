@@ -101,29 +101,29 @@ export default function AssignmentDetailsPage({ params }: { params: Promise<{ co
                 <Link href={`/student/courses/${courseId}/assignments`} className="text-gray-500 hover:text-gray-900 flex items-center gap-2 transition-colors font-medium mb-4">
                     <ArrowLeft className="w-4 h-4" /> Volver a Tareas
                 </Link>
-                <div className="flex items-start justify-between gap-4">
+                <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
                     <div>
-                        <h1 className="text-3xl font-bold text-gray-900">{assignment.title}</h1>
-                        <div className="flex items-center gap-4 mt-2 text-sm text-gray-500">
-                            <span className="flex items-center gap-1 bg-gray-100 px-2 py-1 rounded-lg">
+                        <h1 className="text-2xl md:text-3xl font-bold text-gray-900">{assignment.title}</h1>
+                        <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 mt-2 text-sm text-gray-500">
+                            <span className="flex items-center gap-1 bg-gray-100 px-2 py-1 rounded-lg w-fit">
                                 <Calendar className="w-4 h-4" />
                                 Vence: {new Date(assignment.dueDate).toLocaleString()}
                             </span>
-                            <span className="bg-blue-50 text-blue-700 px-2 py-1 rounded-lg font-medium">
+                            <span className="bg-blue-50 text-blue-700 px-2 py-1 rounded-lg font-medium w-fit">
                                 Módulo: {assignment.module.title}
                             </span>
                         </div>
                     </div>
                     {submission ? (
-                        <div className="bg-green-100 text-green-700 px-4 py-2 rounded-xl flex items-center gap-2 font-bold shadow-sm">
+                        <div className="bg-green-100 text-green-700 px-4 py-2 rounded-xl flex items-center gap-2 font-bold shadow-sm w-fit">
                             <CheckCircle className="w-5 h-5" /> Entregado
                         </div>
                     ) : isPastDue ? (
-                        <div className="bg-red-100 text-red-700 px-4 py-2 rounded-xl flex items-center gap-2 font-bold shadow-sm">
+                        <div className="bg-red-100 text-red-700 px-4 py-2 rounded-xl flex items-center gap-2 font-bold shadow-sm w-fit">
                             <AlertCircle className="w-5 h-5" /> Vencida
                         </div>
                     ) : (
-                        <div className="bg-yellow-100 text-yellow-700 px-4 py-2 rounded-xl flex items-center gap-2 font-bold shadow-sm">
+                        <div className="bg-yellow-100 text-yellow-700 px-4 py-2 rounded-xl flex items-center gap-2 font-bold shadow-sm w-fit">
                             <Clock className="w-5 h-5" /> Pendiente
                         </div>
                     )}

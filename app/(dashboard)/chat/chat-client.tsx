@@ -51,6 +51,8 @@ export default function ChatPage() {
 
     // Clear Chat Modal State
     const [showClearChatModal, setShowClearChatModal] = useState(false);
+    const [chatToClear, setChatToClear] = useState<string | null>(null);
+    const [openMenuId, setOpenMenuId] = useState<string | null>(null);
 
     const messagesEndRef = useRef<HTMLDivElement>(null);
 
@@ -73,6 +75,8 @@ export default function ChatPage() {
         if (result.success && result.data) {
             setMessages(result.data as unknown as ChatMessage[]);
             scrollToBottom();
+            // Trigger badge update since messages are marked as read
+            window.dispatchEvent(new Event('notifications-updated'));
         }
     };
 
@@ -108,6 +112,7 @@ export default function ChatPage() {
             setNewMessage("");
             loadMessages(activeConversation.id);
             loadConversations(); // Update last message in sidebar
+            window.dispatchEvent(new Event('notifications-updated'));
         }
         setSending(false);
     };
@@ -141,16 +146,26 @@ export default function ChatPage() {
     };
 
     const handleClearChatClick = () => {
-        setShowMenu(false);
-        setShowClearChatModal(true);
+        if (activeConversation) {
+            setChatToClear(activeConversation.id);
+            setShowMenu(false);
+            setShowClearChatModal(true);
+        }
     };
 
     const confirmClearChat = async () => {
-        if (!activeConversation) return;
-        const result = await clearChat(activeConversation.id);
+        if (!chatToClear) return;
+
+        const result = await clearChat(chatToClear);
         if (result.success) {
-            setMessages([]);
+            // If we cleared the active conversation, clear messages view
+            if (activeConversation && activeConversation.id === chatToClear) {
+                setMessages([]);
+                setActiveConversation(null); // Deselect conversation since it disappears
+            }
+
             setShowClearChatModal(false);
+            setChatToClear(null);
             loadConversations();
         }
     };
@@ -218,7 +233,7 @@ export default function ChatPage() {
                                         loadMessages(convo.id);
                                         setShowMenu(false);
                                     }}
-                                    className={`p-4 flex items-center gap-3 cursor-pointer transition-colors border-b border-gray-50 hover:bg-gray-50 ${isActive ? 'bg-blue-50/60 border-l-4 border-l-blue-600' : 'border-l-4 border-l-transparent'}`}
+                                    className={`group relative p-4 flex items-center gap-3 cursor-pointer transition-colors border-b border-gray-50 hover:bg-gray-50 ${isActive ? 'bg-blue-50/60 border-l-4 border-l-blue-600' : 'border-l-4 border-l-transparent'}`}
                                 >
                                     <div className="relative w-12 h-12 flex-shrink-0">
                                         <div className="w-full h-full rounded-full bg-gradient-to-br from-blue-400 to-indigo-500 flex items-center justify-center text-white font-bold text-lg shadow-sm overflow-hidden">
@@ -253,6 +268,46 @@ export default function ChatPage() {
                                                 <span className="italic text-gray-400">Nueva conversación</span>
                                             )}
                                         </p>
+                                    </div>
+
+                                    {/* Options Menu Button */}
+                                    <div className="relative">
+                                        <button
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                setOpenMenuId(openMenuId === convo.id ? null : convo.id);
+                                            }}
+                                            className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-full transition-colors"
+                                        >
+                                            <MoreVertical className="w-5 h-5" />
+                                        </button>
+
+                                        {/* Dropdown Menu */}
+                                        {openMenuId === convo.id && (
+                                            <>
+                                                <div
+                                                    className="fixed inset-0 z-10"
+                                                    onClick={(e) => {
+                                                        e.stopPropagation();
+                                                        setOpenMenuId(null);
+                                                    }}
+                                                />
+                                                <div className="absolute right-0 top-full mt-1 w-40 bg-white rounded-xl shadow-lg border border-gray-100 py-1 z-20">
+                                                    <button
+                                                        onClick={(e) => {
+                                                            e.stopPropagation();
+                                                            setChatToClear(convo.id);
+                                                            setShowClearChatModal(true);
+                                                            setOpenMenuId(null);
+                                                        }}
+                                                        className="w-full flex items-center gap-2 px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors text-left"
+                                                    >
+                                                        <Trash2 className="w-4 h-4" />
+                                                        Eliminar
+                                                    </button>
+                                                </div>
+                                            </>
+                                        )}
                                     </div>
                                 </div>
                             );

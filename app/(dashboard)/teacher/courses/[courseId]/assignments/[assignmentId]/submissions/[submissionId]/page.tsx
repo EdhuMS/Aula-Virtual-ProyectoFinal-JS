@@ -96,6 +96,7 @@ export default function GradeSubmissionPage() {
             setHasPendingRequest(true);
             setShowRequestModal(false);
             setSuccessMessage("Solicitud enviada al administrador.");
+            window.dispatchEvent(new Event('notifications-updated'));
         } else {
             setErrorMessage(result.error || "Error al enviar la solicitud");
         }

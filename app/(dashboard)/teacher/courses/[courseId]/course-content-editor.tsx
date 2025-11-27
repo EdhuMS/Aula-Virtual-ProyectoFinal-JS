@@ -153,7 +153,7 @@ export default function CourseContentEditor({ courseId, modules }: { courseId: s
                     {isCreatingModule && (
                         <form onSubmit={handleCreateModule} className="bg-white p-6 rounded-2xl shadow-lg border border-blue-100 animate-in fade-in slide-in-from-top-2 ring-1 ring-blue-500/20 mb-6">
                             <h3 className="text-sm font-semibold text-blue-600 uppercase tracking-wider mb-3">Nuevo Módulo</h3>
-                            <div className="flex gap-3">
+                            <div className="flex flex-col md:flex-row gap-3">
                                 <input
                                     type="text"
                                     value={newModuleTitle}
@@ -162,8 +162,10 @@ export default function CourseContentEditor({ courseId, modules }: { courseId: s
                                     className="flex-1 px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"
                                     autoFocus
                                 />
-                                <button type="submit" className="bg-blue-600 text-white px-6 py-3 rounded-xl hover:bg-blue-700 font-medium transition-colors">Guardar</button>
-                                <button type="button" onClick={() => setIsCreatingModule(false)} className="text-gray-500 px-6 py-3 hover:bg-gray-100 rounded-xl font-medium transition-colors">Cancelar</button>
+                                <div className="flex gap-3">
+                                    <button type="submit" className="flex-1 md:flex-none bg-blue-600 text-white px-6 py-3 rounded-xl hover:bg-blue-700 font-medium transition-colors">Guardar</button>
+                                    <button type="button" onClick={() => setIsCreatingModule(false)} className="flex-1 md:flex-none text-gray-500 px-6 py-3 hover:bg-gray-100 rounded-xl font-medium transition-colors">Cancelar</button>
+                                </div>
                             </div>
                         </form>
                     )}
@@ -330,17 +332,19 @@ export default function CourseContentEditor({ courseId, modules }: { courseId: s
 
                                         {/* Formularios de Creación */}
                                         {isCreatingLesson === module.id && (
-                                            <form onSubmit={(e) => handleCreateLesson(e, module.id)} className="mt-2 flex gap-2 p-3 ml-4 bg-white rounded-xl border border-blue-200 shadow-sm">
+                                            <form onSubmit={(e) => handleCreateLesson(e, module.id)} className="mt-2 flex flex-col md:flex-row gap-2 p-3 ml-0 md:ml-4 bg-white rounded-xl border border-blue-200 shadow-sm">
                                                 <input
                                                     type="text"
                                                     value={newLessonTitle}
                                                     onChange={(e) => setNewLessonTitle(e.target.value)}
                                                     placeholder="Título de la Lección"
-                                                    className="flex-1 px-3 py-2 border-none text-sm focus:outline-none focus:ring-0 font-medium"
+                                                    className="w-full md:flex-1 px-3 py-2 border-none text-sm focus:outline-none focus:ring-0 font-medium"
                                                     autoFocus
                                                 />
-                                                <button type="submit" className="bg-blue-600 text-white px-4 py-1.5 rounded-lg text-sm hover:bg-blue-700 font-medium">Añadir</button>
-                                                <button type="button" onClick={() => setIsCreatingLesson(null)} className="text-gray-500 px-4 py-1.5 text-sm hover:bg-gray-100 rounded-lg font-medium">Cancelar</button>
+                                                <div className="flex gap-2 shrink-0">
+                                                    <button type="submit" className="flex-1 md:flex-none bg-blue-600 text-white px-4 py-1.5 rounded-lg text-sm hover:bg-blue-700 font-medium">Añadir</button>
+                                                    <button type="button" onClick={() => setIsCreatingLesson(null)} className="flex-1 md:flex-none text-gray-500 px-4 py-1.5 text-sm hover:bg-gray-100 rounded-lg font-medium">Cancelar</button>
+                                                </div>
                                             </form>
                                         )}
                                     </div>

@@ -39,11 +39,31 @@ export async function getConversations() {
             orderBy: { updatedAt: 'desc' }
         });
 
-        // Transform data to match expected frontend structure
-        const formattedConversations = conversations.map(conv => ({
-            ...conv,
-            participants: conv.participants.map(p => p.user)
-        }));
+        // Transform data to match expected frontend structure and filter cleared conversations
+        const formattedConversations = conversations.map(conv => {
+            let clearedTime = new Date(0);
+            if (conv.clearedAt && typeof conv.clearedAt === 'object' && !Array.isArray(conv.clearedAt)) {
+                const clearedMap = conv.clearedAt as Prisma.JsonObject;
+                if (clearedMap[user.id] && typeof clearedMap[user.id] === 'string') {
+                    clearedTime = new Date(clearedMap[user.id] as string);
+                }
+            }
+
+            // Check if the last message is older than clearedTime
+            const lastMessage = conv.messages[0];
+            const isCleared = lastMessage ? new Date(lastMessage.createdAt) <= clearedTime : true;
+
+            // If it's cleared (or no messages) AND we have a clearedTime set (meaning user explicitly cleared it), hide it.
+            // If it's a brand new conversation (no messages, no clearedTime), we keep it.
+            if (isCleared && clearedTime.getTime() > 0) {
+                return null;
+            }
+
+            return {
+                ...conv,
+                participants: conv.participants.map(p => p.user)
+            };
+        }).filter(Boolean);
 
         return { success: true, data: formattedConversations };
     } catch (error) {

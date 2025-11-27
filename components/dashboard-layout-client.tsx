@@ -41,8 +41,8 @@ export default function DashboardLayoutClient({
         // Escuchar actualizaciones de otros componentes
         window.addEventListener('notifications-updated', updateCount);
 
-        // Sondear cada 20 segundos para evitar límites de tasa
-        const interval = setInterval(updateCount, 20000);
+        // Sondear cada 5 segundos para mejor respuesta
+        const interval = setInterval(updateCount, 5000);
 
         return () => {
             clearInterval(interval);
