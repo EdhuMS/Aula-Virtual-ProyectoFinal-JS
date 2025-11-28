@@ -161,6 +161,21 @@ export async function createConversation(participantId: string) {
         });
 
         if (existing) {
+            // Si la conversación existe pero estaba oculta (cleared), la restauramos
+            const currentCleared = (existing.clearedAt && typeof existing.clearedAt === 'object' && !Array.isArray(existing.clearedAt)
+                ? existing.clearedAt
+                : {}) as Prisma.JsonObject;
+
+            if (currentCleared[user.id]) {
+                const newCleared = { ...currentCleared };
+                delete newCleared[user.id];
+
+                await prisma.conversation.update({
+                    where: { id: existing.id },
+                    data: { clearedAt: newCleared }
+                });
+            }
+
             return { success: true, data: existing };
         }
 
