@@ -8,6 +8,7 @@ import { getUnreadRequestCount } from "@/actions/teacher-actions";
 import { getPendingRequestCount } from "@/actions/admin-actions";
 import { getUnreadMessageCount } from "@/actions/chat-actions";
 import Image from "next/image";
+import { useSession } from "next-auth/react";
 
 export default function DashboardLayoutClient({
     children,
@@ -21,6 +22,14 @@ export default function DashboardLayoutClient({
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
     const [unreadCount, setUnreadCount] = useState(0);
     const [chatUnreadCount, setChatUnreadCount] = useState(0);
+    const { data: session } = useSession();
+
+    // Use session data if available (reactive), otherwise fallback to initial prop
+    const currentUser = session?.user ? {
+        name: session.user.name,
+        email: session.user.email,
+        image: session.user.image
+    } : user;
 
     useEffect(() => {
         const updateCount = () => {
@@ -198,22 +207,22 @@ export default function DashboardLayoutClient({
                 <div className="p-6 border-t border-gray-100 bg-gray-50/50">
                     <div className="flex items-center gap-3 mb-4 px-2">
                         <div className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center text-white font-bold shadow-md overflow-hidden">
-                            {user.image ? (
+                            {currentUser.image ? (
                                 <Image
-                                    src={user.image}
-                                    alt={user.name || "User"}
+                                    src={currentUser.image}
+                                    alt={currentUser.name || "User"}
                                     width={40}
                                     height={40}
                                     className="w-full h-full object-cover"
                                     unoptimized
                                 />
                             ) : (
-                                user.email?.charAt(0).toUpperCase()
+                                currentUser.email?.charAt(0).toUpperCase()
                             )}
                         </div>
                         <div className="overflow-hidden">
-                            <p className="text-sm font-bold text-gray-900 truncate">{user.name || "Usuario"}</p>
-                            <p className="text-xs text-gray-500 truncate">{user.email}</p>
+                            <p className="text-sm font-bold text-gray-900 truncate">{currentUser.name || "Usuario"}</p>
+                            <p className="text-xs text-gray-500 truncate">{currentUser.email}</p>
                         </div>
                     </div>
                     <SignOutButton />
