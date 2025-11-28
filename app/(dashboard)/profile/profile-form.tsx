@@ -1,14 +1,22 @@
 "use client";
 
 import { updateProfile } from "@/actions/profile-actions";
-import { useActionState, useState } from "react";
+import { useActionState, useState, useEffect } from "react";
 import { User, Mail, Image as ImageIcon, Loader2, Save } from "lucide-react";
 import { CldUploadButton } from "next-cloudinary";
 import Image from "next/image";
+import { useSession } from "next-auth/react";
 
 export default function ProfileForm({ user }: { user: any }) {
     const [state, action, isPending] = useActionState(updateProfile, null);
     const [imageUrl, setImageUrl] = useState(user.image || "");
+    const { update } = useSession();
+
+    useEffect(() => {
+        if (state?.success) {
+            update({ name: state.name, image: state.image });
+        }
+    }, [state, update]);
 
     return (
         <form action={action} className="space-y-6">

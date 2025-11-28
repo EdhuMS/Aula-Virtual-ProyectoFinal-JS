@@ -29,7 +29,7 @@ export async function updateProfile(prevState: any, formData: FormData) {
         });
 
         revalidatePath("/profile");
-        return { success: true, message: "Perfil actualizado correctamente" };
+        return { success: true, message: "Perfil actualizado correctamente", name, image };
     } catch (error) {
         console.error("Error updating profile:", error);
         return { success: false, error: "Error al actualizar el perfil" };
