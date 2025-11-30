@@ -14,6 +14,7 @@ interface User {
     email: string;
     role: Role;
     createdAt: Date;
+    image: string | null;
 }
 
 interface State {
@@ -233,9 +234,17 @@ export default function UserManagementClient({ initialUsers }: { initialUsers: U
                                     <tr key={user.id} className="hover:bg-gray-50/50 transition-colors">
                                         <td className="px-6 py-4 whitespace-nowrap">
                                             <div className="flex items-center">
-                                                <div className="h-10 w-10 rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center text-white font-bold text-sm shadow-sm">
-                                                    {user.name.charAt(0).toUpperCase()}
-                                                </div>
+                                                {user.image ? (
+                                                    <img
+                                                        src={user.image}
+                                                        alt={user.name}
+                                                        className="h-10 w-10 rounded-full object-cover shadow-sm"
+                                                    />
+                                                ) : (
+                                                    <div className="h-10 w-10 rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center text-white font-bold text-sm shadow-sm">
+                                                        {user.name.charAt(0).toUpperCase()}
+                                                    </div>
+                                                )}
                                                 <div className="ml-4">
                                                     <div className="text-sm font-bold text-gray-900">{user.name}</div>
                                                     <div className="text-sm text-gray-500">{user.email}</div>
@@ -304,9 +313,17 @@ export default function UserManagementClient({ initialUsers }: { initialUsers: U
                         <div key={user.id} className="bg-white p-4 rounded-xl shadow-sm border border-gray-100 space-y-4">
                             <div className="flex items-center justify-between">
                                 <div className="flex items-center gap-3">
-                                    <div className="h-10 w-10 rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center text-white font-bold text-sm shadow-sm">
-                                        {user.name.charAt(0).toUpperCase()}
-                                    </div>
+                                    {user.image ? (
+                                        <img
+                                            src={user.image}
+                                            alt={user.name}
+                                            className="h-10 w-10 rounded-full object-cover shadow-sm"
+                                        />
+                                    ) : (
+                                        <div className="h-10 w-10 rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center text-white font-bold text-sm shadow-sm">
+                                            {user.name.charAt(0).toUpperCase()}
+                                        </div>
+                                    )}
                                     <div>
                                         <div className="text-sm font-bold text-gray-900">{user.name}</div>
                                         <div className="text-xs text-gray-500">{user.email}</div>

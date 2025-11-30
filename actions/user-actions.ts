@@ -27,6 +27,7 @@ export async function getUsers() {
                 email: true,
                 role: true,
                 createdAt: true,
+                image: true,
             },
         });
         return { success: true, data: users };
@@ -114,7 +115,7 @@ export async function getTeachers() {
         const teachers = await prisma.user.findMany({
             where: { role: "TEACHER" },
             orderBy: { name: "asc" },
-            select: { id: true, name: true, email: true },
+            select: { id: true, name: true, email: true, image: true },
         });
         return { success: true, data: teachers };
     } catch (error) {
