@@ -14,7 +14,7 @@ Este documento detalla las decisiones de arquitectura, la estructura del proyect
 -   **Razón**: Las Server Actions permiten llamar a funciones del servidor directamente desde componentes del cliente (o servidor), simplificando la gestión de datos y eliminando la necesidad de capas de fetch/axios manuales y endpoints intermedios.
 -   **Seguridad**: Validación de inputs con Zod (implícito o explícito) y verificación de sesión en cada acción.
 
-### Base de Datos: PostgreSQL + Prisma ORM
+### Base de Datos: MySQL + Prisma ORM
 -   **Prisma**: Proporciona un tipado estático fuerte (TypeScript) desde la base de datos hasta el frontend, reduciendo errores en tiempo de ejecución.
 -   **Esquema**: Relacional, optimizado para la integridad de datos (Usuarios, Cursos, Inscripciones, Entregas).
 
