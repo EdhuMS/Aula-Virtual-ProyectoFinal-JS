@@ -43,13 +43,13 @@ export default function ChatPage() {
     const [sending, setSending] = useState(false);
     const [showMenu, setShowMenu] = useState(false);
 
-    // New Chat Modal State
+    // Estado del modal de nuevo chat
     const [showNewChatModal, setShowNewChatModal] = useState(false);
     const [availableUsers, setAvailableUsers] = useState<ChatUser[]>([]);
     const [userSearch, setUserSearch] = useState("");
     const [creatingChat, setCreatingChat] = useState(false);
 
-    // Clear Chat Modal State
+    // Estado del modal de limpiar chat
     const [showClearChatModal, setShowClearChatModal] = useState(false);
     const [chatToClear, setChatToClear] = useState<string | null>(null);
     const [openMenuId, setOpenMenuId] = useState<string | null>(null);
@@ -60,7 +60,7 @@ export default function ChatPage() {
         messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
     };
 
-    // Load Conversations
+    // Cargar conversaciones
     const loadConversations = async () => {
         const result = await getConversations();
         if (result.success && result.data) {
@@ -69,35 +69,35 @@ export default function ChatPage() {
         setLoading(false);
     };
 
-    // Load Messages for Active Conversation
+    // Cargar mensajes para la conversación activa
     const loadMessages = async (conversationId: string) => {
         const result = await getMessages(conversationId);
         if (result.success && result.data) {
             setMessages(result.data as unknown as ChatMessage[]);
             scrollToBottom();
-            // Trigger badge update since messages are marked as read
+            // Activar la actualización de la notificación
             window.dispatchEvent(new Event('notifications-updated'));
         }
     };
 
-    // Initial Load
+    // Cargar conversaciones iniciales
     useEffect(() => {
         loadConversations();
     }, []);
 
-    // Polling for updates
+    // Cargar conversaciones y mensajes
     useEffect(() => {
         const interval = setInterval(() => {
             loadConversations();
             if (activeConversation) {
                 loadMessages(activeConversation.id);
             }
-        }, 10000); // Poll every 10 seconds
+        }, 10000); // Cargar cada 10 segundos
 
         return () => clearInterval(interval);
     }, [activeConversation]);
 
-    // Scroll on new messages
+    // Scroll al finalizar los mensajes
     useEffect(() => {
         scrollToBottom();
     }, [messages]);
@@ -111,7 +111,7 @@ export default function ChatPage() {
         if (result.success) {
             setNewMessage("");
             loadMessages(activeConversation.id);
-            loadConversations(); // Update last message in sidebar
+            loadConversations(); // Actualizar la conversación en el sidebar
             window.dispatchEvent(new Event('notifications-updated'));
         }
         setSending(false);
@@ -158,10 +158,10 @@ export default function ChatPage() {
 
         const result = await clearChat(chatToClear);
         if (result.success) {
-            // If we cleared the active conversation, clear messages view
+            // Si eliminamos la conversación activa, limpiamos la vista de mensajes
             if (activeConversation && activeConversation.id === chatToClear) {
                 setMessages([]);
-                setActiveConversation(null); // Deselect conversation since it disappears
+                setActiveConversation(null); // Deseleccionamos la conversación ya que desaparece
             }
 
             setShowClearChatModal(false);
@@ -270,7 +270,7 @@ export default function ChatPage() {
                                         </p>
                                     </div>
 
-                                    {/* Options Menu Button */}
+                                    {/* Botón de opciones */}
                                     <div className="relative">
                                         <button
                                             onClick={(e) => {
@@ -282,7 +282,7 @@ export default function ChatPage() {
                                             <MoreVertical className="w-5 h-5" />
                                         </button>
 
-                                        {/* Dropdown Menu */}
+                                        {/* Menu desplegable */}
                                         {openMenuId === convo.id && (
                                             <>
                                                 <div
@@ -316,7 +316,7 @@ export default function ChatPage() {
                 </div>
             </div>
 
-            {/* Chat Window */}
+            {/* Ventana de chat */}
             {activeConversation ? (
                 <div className={`flex-1 flex flex-col bg-white ${!activeConversation ? 'hidden md:flex' : 'flex'}`}>
                     {/* Header */}
@@ -373,7 +373,7 @@ export default function ChatPage() {
                         </div>
                     </div>
 
-                    {/* Messages */}
+                    {/* Mensajes */}
                     <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-gray-50/30">
                         {messages.length === 0 ? (
                             <div className="flex flex-col items-center justify-center h-full text-gray-400">
@@ -430,7 +430,7 @@ export default function ChatPage() {
                 </div>
             )}
 
-            {/* New Chat Modal */}
+            {/* Modal de nuevo chat */}
             <Modal
                 isOpen={showNewChatModal}
                 onClose={() => setShowNewChatModal(false)}
@@ -484,7 +484,7 @@ export default function ChatPage() {
                 </div>
             </Modal>
 
-            {/* Clear Chat Confirmation Modal */}
+            {/* Modal de confirmación de limpiar chat */}
             <Modal
                 isOpen={showClearChatModal}
                 onClose={() => setShowClearChatModal(false)}

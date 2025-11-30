@@ -8,7 +8,7 @@ import { revalidatePath } from "next/cache";
 async function checkTeacher() {
     const session = await getServerSession(authOptions);
     if (!session || session.user.role !== "TEACHER") {
-        throw new Error("Unauthorized");
+        throw new Error("No autorizado");
     }
     return session;
 }
@@ -35,8 +35,8 @@ export async function getCourseModules(courseId: string) {
         });
         return { success: true, data: modules };
     } catch (error: any) {
-        console.error("Error in getCourseModules:", error);
-        return { success: false, error: error.message || "Failed to fetch modules" };
+        console.error("Error al obtener módulos:", error);
+        return { success: false, error: error.message || "Error al obtener módulos" };
     }
 }
 
@@ -60,7 +60,7 @@ export async function createModule(courseId: string, title: string) {
         revalidatePath(`/teacher/courses/${courseId}`, 'page');
         return { success: true };
     } catch (error) {
-        return { success: false, error: "Failed to create module" };
+        return { success: false, error: "Error al crear módulo" };
     }
 }
 
@@ -73,7 +73,7 @@ export async function deleteModule(moduleId: string, courseId: string) {
         revalidatePath(`/teacher/courses/${courseId}`, 'page');
         return { success: true };
     } catch (error) {
-        return { success: false, error: "Failed to delete module" };
+        return { success: false, error: "Error al eliminar módulo" };
     }
 }
 
@@ -97,7 +97,7 @@ export async function createLesson(moduleId: string, title: string, courseId: st
         revalidatePath(`/teacher/courses/${courseId}`, 'page');
         return { success: true };
     } catch (error) {
-        return { success: false, error: "Failed to create lesson" };
+        return { success: false, error: "Error al crear lección" };
     }
 }
 
@@ -110,7 +110,7 @@ export async function deleteLesson(lessonId: string, courseId: string) {
         revalidatePath(`/teacher/courses/${courseId}`, 'page');
         return { success: true };
     } catch (error) {
-        return { success: false, error: "Failed to delete lesson" };
+        return { success: false, error: "Error al eliminar lección" };
     }
 }
 export async function getStudentModules(courseId: string) {
@@ -163,7 +163,7 @@ export async function getStudentModules(courseId: string) {
         });
         return { success: true, data: modules };
     } catch (error: any) {
-        console.error("Error in getStudentModules:", error);
+        console.error("Error al obtener módulos:", error);
         return { success: false, error: "Error al cargar los módulos" };
     }
 }
@@ -198,38 +198,18 @@ export async function getStudentLesson(courseId: string, lessonId: string) {
             return { success: false, error: "Lección no encontrada" };
         }
 
-        // Lógica para encontrar lecciones siguientes y anteriores
-        // 1. Obtener todas las lecciones del curso ordenadas por semana del módulo y orden de lección
-        const allModules = await prisma.module.findMany({
-            where: { courseId },
-            orderBy: { weekNumber: "asc" },
-            include: {
-                lessons: {
-                    orderBy: { order: "asc" },
-                    select: { id: true, title: true }
-                }
-            }
-        });
-
-        // Aplanar lecciones
-        const allLessons = allModules.flatMap(m => m.lessons);
-        const currentIndex = allLessons.findIndex(l => l.id === lessonId);
-
-        const nextLesson = currentIndex !== -1 && currentIndex < allLessons.length - 1 ? allLessons[currentIndex + 1] : null;
-        const prevLesson = currentIndex > 0 ? allLessons[currentIndex - 1] : null;
+        const { nextItem, prevItem } = await getModuleNavigation(courseId, lessonId, 'lesson');
 
         return {
             success: true,
             data: {
                 lesson,
-                nextLessonId: nextLesson?.id,
-                prevLessonId: prevLesson?.id
+                nextItem,
+                prevItem
             }
         };
-
-    } catch (error: any) {
-        console.error("Error in getStudentLesson:", error);
-        return { success: false, error: "Error al cargar la lección" };
+    } catch (error) {
+        return { success: false, error: "Error al obtener lección" };
     }
 }
 
@@ -241,11 +221,11 @@ export async function getLesson(lessonId: string) {
         });
         return { success: true, data: lesson };
     } catch (error) {
-        return { success: false, error: "Failed to fetch lesson" };
+        return { success: false, error: "Error al obtener lección" };
     }
 }
 
-export async function updateLesson(lessonId: string, data: { title: string; content: string; resourceUrl: string }) {
+export async function updateLesson(lessonId: string, data: { title: string; content: string; resourceUrl?: string }) {
     await checkTeacher();
     try {
         await prisma.lesson.update({
@@ -258,6 +238,44 @@ export async function updateLesson(lessonId: string, data: { title: string; cont
         });
         return { success: true };
     } catch (error) {
-        return { success: false, error: "Failed to update lesson" };
+        return { success: false, error: "Error al actualizar lección" };
     }
+}
+
+export async function getModuleNavigation(courseId: string, currentItemId: string, currentItemType: 'lesson' | 'assignment' | 'quiz') {
+    // 1. Obtener todas las lecciones, tareas y cuestionarios del curso ordenadas por semana del módulo
+    const allModules = await prisma.module.findMany({
+        where: { courseId },
+        orderBy: { weekNumber: "asc" },
+        include: {
+            lessons: {
+                orderBy: { order: "asc" },
+                select: { id: true, title: true }
+            },
+            assignments: {
+                orderBy: { dueDate: "asc" },
+                select: { id: true, title: true }
+            },
+            quizzes: {
+                orderBy: { opensAt: "asc" },
+                select: { id: true, title: true }
+            }
+        }
+    });
+
+    // Aplanar todos los items en orden: Lecciones -> Tareas -> Cuestionarios (por módulo)
+    type CourseItem = { id: string; title: string; type: 'lesson' | 'assignment' | 'quiz' };
+
+    const allItems: CourseItem[] = allModules.flatMap(m => [
+        ...m.lessons.map(l => ({ ...l, type: 'lesson' as const })),
+        ...m.assignments.map(a => ({ ...a, type: 'assignment' as const })),
+        ...m.quizzes.map(q => ({ ...q, type: 'quiz' as const }))
+    ]);
+
+    const currentIndex = allItems.findIndex(item => item.id === currentItemId && item.type === currentItemType);
+
+    const nextItem = currentIndex !== -1 && currentIndex < allItems.length - 1 ? allItems[currentIndex + 1] : null;
+    const prevItem = currentIndex > 0 ? allItems[currentIndex - 1] : null;
+
+    return { nextItem, prevItem };
 }

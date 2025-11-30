@@ -8,7 +8,7 @@ import { revalidatePath } from "next/cache";
 async function checkTeacher() {
     const session = await getServerSession(authOptions);
     if (!session || session.user.role !== "TEACHER") {
-        throw new Error("Unauthorized");
+        throw new Error("No autorizado");
     }
     return session;
 }
@@ -28,8 +28,8 @@ export async function createAssignment(courseId: string, data: { title: string; 
         revalidatePath(`/teacher/courses/${courseId}/assignments`);
         return { success: true };
     } catch (error) {
-        console.error("Error creating assignment:", error);
-        return { success: false, error: "Failed to create assignment" };
+        console.error("Error al crear tarea:", error);
+        return { success: false, error: "Error al crear tarea" };
     }
 }
 
@@ -50,7 +50,7 @@ export async function getCourseAssignments(courseId: string) {
         });
         return { success: true, data: assignments };
     } catch (error) {
-        return { success: false, error: "Failed to fetch assignments" };
+        return { success: false, error: "Error al obtener tareas" };
     }
 }
 
@@ -63,13 +63,13 @@ export async function deleteAssignment(assignmentId: string, courseId: string) {
         revalidatePath(`/teacher/courses/${courseId}/assignments`);
         return { success: true };
     } catch (error) {
-        return { success: false, error: "Failed to delete assignment" };
+        return { success: false, error: "Error al eliminar tarea" };
     }
 }
 
 export async function getAssignment(assignmentId: string) {
     const session = await getServerSession(authOptions);
-    if (!session) return { success: false, error: "Unauthorized" };
+    if (!session) return { success: false, error: "No autorizado" };
 
     try {
         const assignment = await prisma.assignment.findUnique({
@@ -79,16 +79,30 @@ export async function getAssignment(assignmentId: string) {
                 course: { select: { title: true } }
             }
         });
-        return { success: true, data: assignment };
+
+        if (!assignment) return { success: false, error: "Tarea no encontrada" };
+
+        // Importación dinámica para evitar dependencias circulares
+        const { getModuleNavigation } = await import("./module-actions");
+        const { nextItem, prevItem } = await getModuleNavigation(assignment.courseId, assignmentId, 'assignment');
+
+        return {
+            success: true,
+            data: {
+                ...assignment,
+                nextItem,
+                prevItem
+            }
+        };
     } catch (error) {
-        return { success: false, error: "Failed to fetch assignment" };
+        return { success: false, error: "Error al obtener tarea" };
     }
 }
 
 export async function submitAssignment(assignmentId: string, fileUrls: string[], studentComment?: string) {
     const session = await getServerSession(authOptions);
     if (!session || session.user.role !== "STUDENT") {
-        return { success: false, error: "Unauthorized" };
+        return { success: false, error: "No autorizado" };
     }
 
     try {
@@ -104,7 +118,7 @@ export async function submitAssignment(assignmentId: string, fileUrls: string[],
         return { success: true };
     } catch (error) {
         console.error("Submit error:", error);
-        return { success: false, error: "Failed to submit assignment" };
+        return { success: false, error: "Error al enviar tarea" };
     }
 }
 
@@ -125,7 +139,7 @@ export async function getStudentSubmission(assignmentId: string) {
         });
         return { success: true, data: submission };
     } catch (error) {
-        return { success: false, error: "Failed to fetch submission" };
+        return { success: false, error: "Error al obtener entrega" };
     }
 }
 
@@ -165,7 +179,7 @@ export async function getStudentAssignments(courseId: string) {
         });
         return { success: true, data: assignments };
     } catch (error) {
-        return { success: false, error: "Failed to fetch assignments" };
+        return { success: false, error: "Error al obtener tareas" };
     }
 }
 
@@ -185,8 +199,8 @@ export async function updateAssignment(assignmentId: string, courseId: string, d
         revalidatePath(`/teacher/courses/${courseId}`); // Actualizar vista del módulo
         return { success: true };
     } catch (error) {
-        console.error("Error updating assignment:", error);
-        return { success: false, error: "Failed to update assignment" };
+        console.error("Error al actualizar tarea:", error);
+        return { success: false, error: "Error al actualizar tarea" };
     }
 }
 
@@ -204,7 +218,7 @@ export async function getAssignmentSubmissions(assignmentId: string) {
         });
         return { success: true, data: submissions };
     } catch (error) {
-        return { success: false, error: "Failed to fetch submissions" };
+        return { success: false, error: "Error al obtener entregas" };
     }
 }
 
@@ -217,7 +231,7 @@ export async function gradeSubmission(submissionId: string, grade: number, feedb
         });
 
         if (!submission) {
-            return { success: false, error: "Submission not found" };
+            return { success: false, error: "Entrega no encontrada" };
         }
 
         // Verificar si está bloqueado
@@ -237,7 +251,7 @@ export async function gradeSubmission(submissionId: string, grade: number, feedb
         revalidatePath(`/teacher/courses/${courseId}/assignments/${assignmentId}/submissions`);
         return { success: true };
     } catch (error) {
-        return { success: false, error: "Failed to grade submission" };
+        return { success: false, error: "Error al calificar entrega" };
     }
 }
 
@@ -267,7 +281,7 @@ export async function requestGradeChange(submissionId: string, reason: string) {
 
         return { success: true };
     } catch (error) {
-        console.error("Error requesting grade change:", error);
+        console.error("Error al enviar la solicitud:", error);
         return { success: false, error: "Error al enviar la solicitud." };
     }
 }
@@ -283,7 +297,7 @@ export async function getGradeChangeStatus(submissionId: string) {
         });
         return { success: true, hasPendingRequest: !!request };
     } catch (error) {
-        return { success: false, error: "Error checking request status" };
+        return { success: false, error: "Error al verificar estado de solicitud" };
     }
 }
 
@@ -303,6 +317,6 @@ export async function getSubmissionForGrading(submissionId: string) {
         });
         return { success: true, data: submission };
     } catch (error) {
-        return { success: false, error: "Failed to fetch submission" };
+        return { success: false, error: "Error al obtener entrega" };
     }
 }

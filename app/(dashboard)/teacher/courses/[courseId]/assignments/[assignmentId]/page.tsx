@@ -21,7 +21,7 @@ export default function EditAssignmentPage({ params }: { params: Promise<{ cours
         moduleId: "",
     });
 
-    // Modal states
+    // Estados de los modales
     const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
     const router = useRouter();
@@ -42,8 +42,8 @@ export default function EditAssignmentPage({ params }: { params: Promise<{ cours
 
             if (assignmentResult.success && assignmentResult.data) {
                 const assignment = assignmentResult.data;
-                // Format date for datetime-local input (YYYY-MM-DDThh:mm)
-                // adjusting for local timezone
+                // Formatear fecha para entrada datetime-local (YYYY-MM-DDThh:mm)
+                // ajustando para el huso horario local
                 const date = new Date(assignment.dueDate);
                 const offset = date.getTimezoneOffset();
                 const adjustedDate = new Date(date.getTime() - (offset * 60 * 1000));

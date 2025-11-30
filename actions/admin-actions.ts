@@ -8,7 +8,7 @@ import { revalidatePath } from "next/cache";
 async function checkAdmin() {
     const session = await getServerSession(authOptions);
     if (!session || session.user.role !== "ADMIN") {
-        throw new Error("Unauthorized");
+        throw new Error("No autorizado");
     }
     return session;
 }
@@ -33,7 +33,7 @@ export async function getPendingGradeRequests() {
         });
         return { success: true, data: requests };
     } catch (error) {
-        return { success: false, error: "Failed to fetch requests" };
+        return { success: false, error: "Error al obtener solicitudes" };
     }
 }
 
@@ -65,7 +65,7 @@ export async function approveGradeRequest(requestId: string) {
         revalidatePath("/admin/requests");
         return { success: true };
     } catch (error) {
-        return { success: false, error: "Failed to approve request" };
+        return { success: false, error: "Error al aprobar solicitud" };
     }
 }
 
@@ -76,14 +76,14 @@ export async function rejectGradeRequest(requestId: string) {
             where: { id: requestId },
             data: {
                 status: "REJECTED",
-                isReadByTeacher: false // Notify teacher
+                isReadByTeacher: false // Notificar al profesor
             }
         });
 
         revalidatePath("/admin/requests");
         return { success: true };
     } catch (error) {
-        return { success: false, error: "Failed to reject request" };
+        return { success: false, error: "Error al rechazar solicitud" };
     }
 }
 

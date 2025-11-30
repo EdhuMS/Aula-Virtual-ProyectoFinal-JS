@@ -21,7 +21,7 @@ export default function EnrollmentManager({
     const router = useRouter();
     const [isLoading, setIsLoading] = useState(false);
 
-    // Modal states
+    // Estados del modal
     const [studentToUnenroll, setStudentToUnenroll] = useState<string | null>(null);
     const [errorMessage, setErrorMessage] = useState<string | null>(null);
     const [successMessage, setSuccessMessage] = useState<string | null>(null);
@@ -57,7 +57,7 @@ export default function EnrollmentManager({
 
     return (
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            {/* Enrollment Form */}
+            {/* Formulario de Inscripción */}
             <div className="lg:col-span-1 space-y-6">
                 <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-200 sticky top-6">
                     <h2 className="text-lg font-bold mb-6 flex items-center gap-2 text-gray-900">
@@ -97,7 +97,7 @@ export default function EnrollmentManager({
                 </div>
             </div>
 
-            {/* Enrolled Students List */}
+            {/* Lista de Estudiantes Inscritos */}
             <div className="lg:col-span-2">
                 <div className="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
                     <div className="p-6 border-b border-gray-100 flex justify-between items-center bg-gray-50/50">
@@ -145,7 +145,7 @@ export default function EnrollmentManager({
                 </div>
             </div>
 
-            {/* Unenroll Confirmation Modal */}
+            {/* Modal de Confirmación de Eliminación */}
             <Modal
                 isOpen={!!studentToUnenroll}
                 onClose={() => setStudentToUnenroll(null)}
@@ -179,7 +179,7 @@ export default function EnrollmentManager({
                 </div>
             </Modal>
 
-            {/* Success Modal */}
+            {/* Modal de Éxito */}
             <Modal
                 isOpen={!!successMessage}
                 onClose={() => setSuccessMessage(null)}
@@ -201,7 +201,7 @@ export default function EnrollmentManager({
                 </div>
             </Modal>
 
-            {/* Error Modal */}
+            {/* Modal de Error */}
             <Modal
                 isOpen={!!errorMessage}
                 onClose={() => setErrorMessage(null)}

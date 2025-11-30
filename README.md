@@ -14,8 +14,9 @@ Aula Virtual es una plataforma educativa moderna y completa diseñada para facil
 - **Identificadores de Curso**: Código único para cada curso (ej. WEB-101) para fácil identificación.
 - **Contenido Rico**: Soporte para lecciones con contenido multimedia y texto enriquecido.
 - **Tareas**: Sistema de entrega de archivos (PDF, imágenes) con comentarios.
-- **Exámenes**: Cuestionarios de opción múltiple con calificación automática y límites de tiempo.
+- **Exámenes**: Cuestionarios de opción múltiple con calificación automática, límites de tiempo y navegación mejorada.
 - **Inscripciones**: Búsqueda inteligente y filtrado para inscribir estudiantes rápidamente.
+- **Vista Previa**: Los profesores pueden previsualizar las lecciones exactamente como las ven los estudiantes.
 
 ### 💬 Comunicación y Notificaciones
 - **Chat en Tiempo Real**: Mensajería instantánea entre estudiantes y profesores.
@@ -108,7 +109,8 @@ prisma/                     # Esquema de Base de Datos y Seed
 | Rol | Email | Contraseña |
 | :--- | :--- | :--- |
 | **Admin** | `admin@aulavirtual.com` | `123456` |
-| **Profesor** | `juan.perez@aulavirtual.com` | `123456` |
+| **Profesor** | `profesor1@aulavirtual.com` | `123456` |
+| **Profesor** | `profesor2@aulavirtual.com` | `123456` |
 | **Estudiante** | `edhu@aulavirtual.com` | `123456` |
 
 ## 📖 Instrucciones de Uso

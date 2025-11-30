@@ -15,7 +15,7 @@ export default function StudentQuizzesPage({ params }: { params: Promise<{ cours
             setCourseId(resolvedParams.courseId);
             const response = await getStudentModules(resolvedParams.courseId);
             if (response.success && response.data) {
-                // Extract quizzes from modules
+                // Extraemos los cuestionarios de los módulos
                 const allQuizzes = response.data.flatMap((module: any) => module.quizzes || []);
                 setQuizzes(allQuizzes);
             }

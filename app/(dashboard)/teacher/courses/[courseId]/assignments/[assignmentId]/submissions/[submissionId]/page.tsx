@@ -21,14 +21,14 @@ export default function GradeSubmissionPage() {
     const [submission, setSubmission] = useState<any>(null);
     const [loading, setLoading] = useState(true);
 
-    // Locking & Request State
+    // Estado de bloqueo y solicitud
     const [isLocked, setIsLocked] = useState(false);
     const [hasPendingRequest, setHasPendingRequest] = useState(false);
     const [showRequestModal, setShowRequestModal] = useState(false);
     const [requestReason, setRequestReason] = useState("");
     const [requesting, setRequesting] = useState(false);
 
-    // Modal states
+    // Estados de los modales
     const [errorMessage, setErrorMessage] = useState<string | null>(null);
     const [successMessage, setSuccessMessage] = useState<string | null>(null);
 
@@ -49,7 +49,7 @@ export default function GradeSubmissionPage() {
                 setGrade(submissionRes.data.grade?.toString() || "");
                 setFeedback(submissionRes.data.feedback || "");
 
-                // Determine if locked: has grade AND cannot edit
+                // Determinar si está bloqueado: tiene calificación Y no puede editar
                 const locked = submissionRes.data.grade !== null && !submissionRes.data.canEditGrade;
                 setIsLocked(locked);
             }
@@ -78,7 +78,7 @@ export default function GradeSubmissionPage() {
 
         if (result.success) {
             setSuccessMessage("Calificación guardada correctamente. La entrega ha sido bloqueada.");
-            setIsLocked(true); // Optimistic update
+            setIsLocked(true); // Actualización optimista
         } else {
             setErrorMessage(result.error || "Error al guardar la calificación");
         }
@@ -144,7 +144,7 @@ export default function GradeSubmissionPage() {
                 </div>
 
                 <div className="p-8 space-y-8">
-                    {/* Submission Content */}
+                    {/* Contenido de la entrega */}
                     <div className="space-y-6">
                         <div className="space-y-3">
                             <h3 className="text-sm font-bold text-gray-900 uppercase tracking-wider flex items-center gap-2">
@@ -199,7 +199,7 @@ export default function GradeSubmissionPage() {
                         )}
                     </div>
 
-                    {/* Grading Form */}
+                    {/* Formulario de calificación */}
                     <form onSubmit={handleGrade} className="space-y-6 pt-6 border-t border-gray-100">
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                             <div className="space-y-2">
@@ -267,7 +267,7 @@ export default function GradeSubmissionPage() {
                 </div>
             </div>
 
-            {/* Request Change Modal */}
+            {/* Modal de solicitud de corrección */}
             <Modal
                 isOpen={showRequestModal}
                 onClose={() => setShowRequestModal(false)}
@@ -333,7 +333,7 @@ export default function GradeSubmissionPage() {
                 </div>
             </Modal>
 
-            {/* Success Modal */}
+            {/* Modal de exito */}
             <Modal
                 isOpen={!!successMessage}
                 onClose={() => setSuccessMessage(null)}

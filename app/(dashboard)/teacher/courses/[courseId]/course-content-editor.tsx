@@ -4,7 +4,7 @@ import { useState } from "react";
 import { createModule, deleteModule, createLesson, deleteLesson } from "@/actions/module-actions";
 import { deleteAssignment } from "@/actions/assignment-actions";
 import { createQuiz, deleteQuiz } from "@/actions/quiz-actions";
-import { Plus, Trash2, ChevronDown, ChevronRight, FileText, Video, GripVertical, Edit, HelpCircle, BarChart, AlertTriangle, CheckCircle } from "lucide-react";
+import { Plus, Trash2, ChevronDown, ChevronRight, FileText, Video, GripVertical, Edit, HelpCircle, BarChart, AlertTriangle, CheckCircle, Eye } from "lucide-react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Modal } from "@/components/ui/modal";
@@ -226,6 +226,13 @@ export default function CourseContentEditor({ courseId, modules }: { courseId: s
                                                         <span className="text-gray-700 font-medium break-words">{lesson.title}</span>
                                                     </div>
                                                     <div className="flex items-center justify-end gap-1 pl-10 sm:pl-0">
+                                                        <Link
+                                                            href={`/teacher/courses/${courseId}/lessons/${lesson.id}/preview`}
+                                                            className="text-gray-400 hover:text-purple-600 p-2 hover:bg-purple-50 rounded-lg transition-colors"
+                                                            title="Vista Previa (Como Alumno)"
+                                                        >
+                                                            <Eye className="w-4 h-4" />
+                                                        </Link>
                                                         <Link
                                                             href={`/teacher/courses/${courseId}/lessons/${lesson.id}`}
                                                             className="text-gray-400 hover:text-blue-600 p-2 hover:bg-blue-50 rounded-lg transition-colors"

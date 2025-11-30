@@ -132,7 +132,7 @@ export default function CreateCourseForm({ teachers }: { teachers: any[] }) {
                         </div>
                         {teachers.length === 0 && (
                             <p className="text-sm text-amber-600 mt-2 bg-amber-50 p-2 rounded-lg">
-                                ⚠️ No hay profesores registrados. Crea una cuenta de profesor primero.
+                                No hay profesores registrados. Crea una cuenta de profesor primero.
                             </p>
                         )}
                     </div>

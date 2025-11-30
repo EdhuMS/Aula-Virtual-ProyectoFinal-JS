@@ -24,7 +24,7 @@ export default function DashboardLayoutClient({
     const [chatUnreadCount, setChatUnreadCount] = useState(0);
     const { data: session } = useSession();
 
-    // Use session data if available (reactive), otherwise fallback to initial prop
+    // Usar datos de sesión si están disponibles (reactivo), de lo contrario, caer en el prop inicial
     const currentUser = session?.user ? {
         name: session.user.name,
         email: session.user.email,

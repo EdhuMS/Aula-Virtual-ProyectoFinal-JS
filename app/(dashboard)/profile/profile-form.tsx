@@ -64,7 +64,7 @@ export default function ProfileForm({ user }: { user: any }) {
                                     width={80}
                                     height={80}
                                     className="w-full h-full object-cover"
-                                    unoptimized // Cloudinary handles optimization, and domain might not be in next.config
+                                    unoptimized // Cloudinary maneja la optimización, y el dominio podría no estar en next.config
                                 />
                             ) : (
                                 <div className="w-full h-full flex items-center justify-center text-gray-400">

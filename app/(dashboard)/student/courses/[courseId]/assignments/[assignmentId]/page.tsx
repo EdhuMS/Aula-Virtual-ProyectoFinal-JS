@@ -20,7 +20,7 @@ export default function AssignmentDetailsPage({ params }: { params: Promise<{ co
     const [courseId, setCourseId] = useState("");
     const [assignmentId, setAssignmentId] = useState("");
 
-    // Modal states
+    // Estados de los modales
     const [successMessage, setSuccessMessage] = useState<string | null>(null);
     const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
@@ -41,7 +41,7 @@ export default function AssignmentDetailsPage({ params }: { params: Promise<{ co
             }
             if (submissionResult.success) {
                 setSubmission(submissionResult.data);
-                // Cast to any to avoid potential type issues if Prisma types aren't fully synced
+                // Se convierte a 'any' para evitar posibles problemas de tipo si los tipos de Prisma no están completamente sincronizados
                 const data = submissionResult.data as any;
                 if (data?.fileUrls) {
                     const urls = Array.isArray(data.fileUrls)
@@ -62,7 +62,7 @@ export default function AssignmentDetailsPage({ params }: { params: Promise<{ co
         const result = await submitAssignment(assignmentId, fileUrls, comment);
 
         if (result.success) {
-            // Refresh submission status
+            // Se refresca el estado de la entrega
             const submissionResult = await getStudentSubmission(assignmentId);
             if (submissionResult.success) {
                 setSubmission(submissionResult.data);
@@ -95,11 +95,29 @@ export default function AssignmentDetailsPage({ params }: { params: Promise<{ co
 
     const isPastDue = new Date(assignment.dueDate) < new Date();
 
+    const getLink = (item: { id: string, type: string }) => {
+        switch (item.type) {
+            case 'lesson': return `/student/courses/${courseId}/lessons/${item.id}`;
+            case 'assignment': return `/student/courses/${courseId}/assignments/${item.id}`;
+            case 'quiz': return `/student/courses/${courseId}/quizzes/${item.id}`;
+            default: return '#';
+        }
+    };
+
+    const getLabel = (item: { type: string }) => {
+        switch (item.type) {
+            case 'lesson': return 'Lección';
+            case 'assignment': return 'Tarea';
+            case 'quiz': return 'Cuestionario';
+            default: return 'Siguiente';
+        }
+    };
+
     return (
         <div className="max-w-4xl mx-auto pb-12">
             <div className="mb-8">
-                <Link href={`/student/courses/${courseId}/assignments`} className="text-gray-500 hover:text-gray-900 flex items-center gap-2 transition-colors font-medium mb-4">
-                    <ArrowLeft className="w-4 h-4" /> Volver a Tareas
+                <Link href={`/student/courses/${courseId}`} className="text-gray-500 hover:text-gray-900 flex items-center gap-2 transition-colors font-medium mb-4">
+                    <ArrowLeft className="w-4 h-4" /> Volver al Curso
                 </Link>
                 <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
                     <div>
@@ -130,8 +148,8 @@ export default function AssignmentDetailsPage({ params }: { params: Promise<{ co
                 </div>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-1 gap-8">
-                {/* Left Column: Instructions */}
+            <div className="grid grid-cols-1 md:grid-cols-1 gap-8 mb-12">
+                {/* Columna izquierda: Instrucciones */}
                 <div className="md:col-span-2 space-y-6">
                     <div className="bg-white p-8 rounded-3xl shadow-sm border border-gray-100">
                         <h2 className="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
@@ -143,7 +161,7 @@ export default function AssignmentDetailsPage({ params }: { params: Promise<{ co
                     </div>
                 </div>
 
-                {/* Right Column: Submission */}
+                {/* Columna derecha: Entrega */}
                 <div className="space-y-6">
                     <div className="bg-white p-6 rounded-3xl shadow-sm border border-gray-100">
                         <h2 className="text-lg font-bold text-gray-900 mb-4">Tu Entrega</h2>
@@ -276,7 +294,44 @@ export default function AssignmentDetailsPage({ params }: { params: Promise<{ co
                 </div>
             </div>
 
-            {/* Success Modal */}
+            {/* Navegación de pie de página */}
+            <div className="flex justify-between items-center gap-4 mt-8">
+                {assignment.prevItem ? (
+                    <Link
+                        href={getLink(assignment.prevItem)}
+                        className="flex-1 bg-white border border-gray-200 p-4 rounded-xl hover:border-blue-300 hover:shadow-md transition-all group flex items-center gap-3"
+                    >
+                        <div className="bg-gray-50 p-2 rounded-lg group-hover:bg-blue-50 text-gray-400 group-hover:text-blue-600 transition-colors">
+                            <ArrowLeft className="w-5 h-5" />
+                        </div>
+                        <div className="text-left">
+                            <div className="text-xs text-gray-400 font-semibold uppercase tracking-wider">Anterior</div>
+                            <div className="font-bold text-gray-700 group-hover:text-blue-700">{getLabel(assignment.prevItem)} Anterior</div>
+                        </div>
+                    </Link>
+                ) : (
+                    <div className="flex-1"></div> // Espaciador
+                )}
+
+                {assignment.nextItem ? (
+                    <Link
+                        href={getLink(assignment.nextItem)}
+                        className="flex-1 bg-white border border-gray-200 p-4 rounded-xl hover:border-blue-300 hover:shadow-md transition-all group flex items-center justify-end gap-3 text-right"
+                    >
+                        <div className="text-right">
+                            <div className="text-xs text-gray-400 font-semibold uppercase tracking-wider">Siguiente</div>
+                            <div className="font-bold text-gray-700 group-hover:text-blue-700">Siguiente {getLabel(assignment.nextItem)}</div>
+                        </div>
+                        <div className="bg-gray-50 p-2 rounded-lg group-hover:bg-blue-50 text-gray-400 group-hover:text-blue-600 transition-colors">
+                            <ArrowLeft className="w-5 h-5 rotate-180" />
+                        </div>
+                    </Link>
+                ) : (
+                    <div className="flex-1"></div> // Espaciador
+                )}
+            </div>
+
+            {/* Modal de éxito */}
             <Modal
                 isOpen={!!successMessage}
                 onClose={() => setSuccessMessage(null)}

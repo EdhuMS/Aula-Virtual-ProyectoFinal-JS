@@ -6,8 +6,8 @@ export default async function StudentAssignmentsPage({ params }: { params: Promi
     const { courseId } = await params;
     const { data: assignments, error } = await getStudentAssignments(courseId);
 
-    // In a real app, we would also fetch the student's submissions to show status
-    // For now, we'll just list the assignments
+    // En una aplicación real, también podríamos obtener las entregas del estudiante para mostrar su estado
+    // Por ahora, solo listamos las tareas
 
     return (
         <div className="max-w-4xl mx-auto">

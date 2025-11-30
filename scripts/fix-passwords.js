@@ -7,7 +7,7 @@ async function main() {
     const users = await prisma.user.findMany();
 
     for (const user of users) {
-        // Simple check: bcrypt hashes start with $2
+        // Comprobación simple: los hashes de bcrypt comienzan con $2
         if (!user.password.startsWith('$2')) {
             console.log(`Hashing password for user: ${user.email}`);
             const hashedPassword = await bcrypt.hash(user.password, 10);

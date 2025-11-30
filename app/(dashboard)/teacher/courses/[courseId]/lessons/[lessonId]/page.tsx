@@ -17,7 +17,7 @@ export default function LessonEditorPage({ params }: { params: Promise<{ courseI
         resourceUrl: "",
     });
 
-    // Modal states
+    // Estados de los modales
     const [successMessage, setSuccessMessage] = useState<string | null>(null);
     const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
@@ -151,7 +151,7 @@ export default function LessonEditorPage({ params }: { params: Promise<{ courseI
                 </form>
             </div>
 
-            {/* Success Modal */}
+            {/* Modal de exito */}
             <Modal
                 isOpen={!!successMessage}
                 onClose={() => setSuccessMessage(null)}
@@ -165,7 +165,10 @@ export default function LessonEditorPage({ params }: { params: Promise<{ courseI
                         {successMessage}
                     </p>
                     <button
-                        onClick={() => setSuccessMessage(null)}
+                        onClick={() => {
+                            setSuccessMessage(null);
+                            router.push(`/teacher/courses/${courseId}`);
+                        }}
                         className="w-full bg-gray-900 text-white px-4 py-2.5 rounded-xl hover:bg-gray-800 font-semibold transition-colors"
                     >
                         Aceptar

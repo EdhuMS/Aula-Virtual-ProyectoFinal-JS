@@ -53,12 +53,12 @@ async function main() {
             description: 'Curso completo de desarrollo web moderno con Next.js y React.',
             teacherId: teacher.id,
             imageUrl: 'https://res.cloudinary.com/demo/image/upload/v1312461204/sample.jpg',
-            // isPublished removed as it's not in schema
+            // isPublished eliminado ya que no está en el esquema
         }
     });
     console.log('Created Course:', course.title);
 
-    // Enrollment
+    // Inscripción
     await prisma.enrollment.create({
         data: {
             userId: student.id,
@@ -67,19 +67,19 @@ async function main() {
     });
     console.log('Enrolled Student');
 
-    // Module
+    // Modulo
     const module = await prisma.module.create({
         data: {
             title: 'Semana 1: Introducción y Setup',
             description: 'Configuración del entorno y conceptos básicos.',
             courseId: course.id,
-            weekNumber: 1, // Changed from order to weekNumber
-            // isPublished removed
+            weekNumber: 1, // Cambiado de order a weekNumber
+            // isPublished eliminado ya que no está en el esquema
         }
     });
     console.log('Created Module:', module.title);
 
-    // Assignment
+    // Tarea
     const assignment = await prisma.assignment.create({
         data: {
             title: 'Tarea 1: Configuración del Proyecto',
@@ -95,25 +95,22 @@ async function main() {
     const quiz = await prisma.quiz.create({
         data: {
             title: 'Quiz 1: Conceptos de React',
-            // description removed
             moduleId: module.id,
-            // timeLimit, passingScore removed
             opensAt: new Date(),
             closesAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
-            // isPublished removed
             questions: {
                 create: [
                     {
-                        question: '¿Qué es un componente en React?', // Changed from text to question
+                        question: '¿Qué es un componente en React?',
                         points: 5,
-                        options: ["Una función que retorna JSX", "Un archivo CSS", "Una base de datos"], // JSON array
-                        correctOption: 0, // Index of correct option
+                        options: ["Una función que retorna JSX", "Un archivo CSS", "Una base de datos"],
+                        correctOption: 0,
                     },
                     {
-                        question: '¿Para qué sirve useState?', // Changed from text to question
+                        question: '¿Para qué sirve useState?',
                         points: 5,
-                        options: ["Para manejar estado local", "Para hacer peticiones HTTP"], // JSON array
-                        correctOption: 0, // Index of correct option
+                        options: ["Para manejar estado local", "Para hacer peticiones HTTP"],
+                        correctOption: 0,
                     }
                 ]
             }

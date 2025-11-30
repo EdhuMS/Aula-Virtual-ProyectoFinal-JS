@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { getQuizForStudent, submitQuizAttempt } from "@/actions/quiz-actions";
 import { useRouter } from "next/navigation";
-import { ArrowLeft, CheckCircle, Clock, AlertCircle, HelpCircle, Send, AlertTriangle } from "lucide-react";
+import { ArrowLeft, CheckCircle, Clock, AlertCircle, HelpCircle, Send, AlertTriangle, XCircle } from "lucide-react";
 import Link from "next/link";
 import { Modal } from "@/components/ui/modal";
 
@@ -92,6 +92,63 @@ export default function StudentQuizPage({ params }: { params: Promise<{ courseId
 
     const attempt = quiz.attempt;
     const isClosed = quiz.isClosed; // From backend
+
+    const getLink = (item: { id: string, type: string }) => {
+        switch (item.type) {
+            case 'lesson': return `/student/courses/${courseId}/lessons/${item.id}`;
+            case 'assignment': return `/student/courses/${courseId}/assignments/${item.id}`;
+            case 'quiz': return `/student/courses/${courseId}/quizzes/${item.id}`;
+            default: return '#';
+        }
+    };
+
+    const getLabel = (item: { type: string }) => {
+        switch (item.type) {
+            case 'lesson': return 'Lección';
+            case 'assignment': return 'Tarea';
+            case 'quiz': return 'Cuestionario';
+            default: return 'Siguiente';
+        }
+    };
+
+    // Helper for Navigation Buttons
+    const NavigationButtons = () => (
+        <div className="flex justify-between items-center gap-4 mt-8">
+            {quiz.prevItem ? (
+                <Link
+                    href={getLink(quiz.prevItem)}
+                    className="flex-1 bg-white border border-gray-200 p-4 rounded-xl hover:border-blue-300 hover:shadow-md transition-all group flex items-center gap-3"
+                >
+                    <div className="bg-gray-50 p-2 rounded-lg group-hover:bg-blue-50 text-gray-400 group-hover:text-blue-600 transition-colors">
+                        <ArrowLeft className="w-5 h-5" />
+                    </div>
+                    <div className="text-left">
+                        <div className="text-xs text-gray-400 font-semibold uppercase tracking-wider">Anterior</div>
+                        <div className="font-bold text-gray-700 group-hover:text-blue-700">{getLabel(quiz.prevItem)} Anterior</div>
+                    </div>
+                </Link>
+            ) : (
+                <div className="flex-1"></div> // Spacer
+            )}
+
+            {quiz.nextItem ? (
+                <Link
+                    href={getLink(quiz.nextItem)}
+                    className="flex-1 bg-white border border-gray-200 p-4 rounded-xl hover:border-blue-300 hover:shadow-md transition-all group flex items-center justify-end gap-3 text-right"
+                >
+                    <div className="text-right">
+                        <div className="text-xs text-gray-400 font-semibold uppercase tracking-wider">Siguiente</div>
+                        <div className="font-bold text-gray-700 group-hover:text-blue-700">Siguiente {getLabel(quiz.nextItem)}</div>
+                    </div>
+                    <div className="bg-gray-50 p-2 rounded-lg group-hover:bg-blue-50 text-gray-400 group-hover:text-blue-600 transition-colors">
+                        <ArrowLeft className="w-5 h-5 rotate-180" />
+                    </div>
+                </Link>
+            ) : (
+                <div className="flex-1"></div> // Spacer
+            )}
+        </div>
+    );
 
     // RENDER RESULT / REVIEW MODE
     if (attempt || isClosed) {
@@ -197,6 +254,7 @@ export default function StudentQuizPage({ params }: { params: Promise<{ courseId
                         })
                     )}
                 </div>
+                <NavigationButtons />
             </div>
         );
     }
@@ -293,6 +351,8 @@ export default function StudentQuizPage({ params }: { params: Promise<{ courseId
                     )}
                 </button>
             </div>
+
+            <NavigationButtons />
 
             {/* Confirmation Modal */}
             <Modal

@@ -8,7 +8,7 @@ import { revalidatePath } from "next/cache";
 async function checkTeacher() {
     const session = await getServerSession(authOptions);
     if (!session || !session.user || session.user.role !== "TEACHER") {
-        throw new Error("Unauthorized");
+        throw new Error("No autorizado");
     }
     return session.user;
 }
@@ -30,7 +30,7 @@ export async function getTeacherRequests() {
         });
         return { success: true, data: requests };
     } catch (error) {
-        return { success: false, error: "Failed to fetch requests" };
+        return { success: false, error: "Error al obtener solicitudes" };
     }
 }
 

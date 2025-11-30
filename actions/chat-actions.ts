@@ -39,7 +39,7 @@ export async function getConversations() {
             orderBy: { updatedAt: 'desc' }
         });
 
-        // Transform data to match expected frontend structure and filter cleared conversations
+        // Transformar datos para que coincidan con la estructura esperada del frontend y filtrar conversaciones borradas
         const formattedConversations = conversations.map(conv => {
             let clearedTime = new Date(0);
             if (conv.clearedAt && typeof conv.clearedAt === 'object' && !Array.isArray(conv.clearedAt)) {
@@ -49,12 +49,12 @@ export async function getConversations() {
                 }
             }
 
-            // Check if the last message is older than clearedTime
+            // Comprobar si el último mensaje es anterior a clearedTime
             const lastMessage = conv.messages[0];
             const isCleared = lastMessage ? new Date(lastMessage.createdAt) <= clearedTime : true;
 
-            // If it's cleared (or no messages) AND we have a clearedTime set (meaning user explicitly cleared it), hide it.
-            // If it's a brand new conversation (no messages, no clearedTime), we keep it.
+            // Si está borrada (o no hay mensajes) Y tenemos un clearedTime establecido (lo que significa que el usuario la borró explícitamente), la ocultamos.
+            // Si es una conversación nueva (sin mensajes, sin clearedTime), la mantenemos.
             if (isCleared && clearedTime.getTime() > 0) {
                 return null;
             }
@@ -67,8 +67,8 @@ export async function getConversations() {
 
         return { success: true, data: formattedConversations };
     } catch (error) {
-        console.error("Error fetching conversations:", error);
-        return { success: false, error: "Failed to fetch conversations" };
+        console.error("Error al obtener conversaciones:", error);
+        return { success: false, error: "Error al obtener conversaciones" };
     }
 }
 
@@ -117,8 +117,8 @@ export async function getMessages(conversationId: string) {
 
         return { success: true, data: messages };
     } catch (error) {
-        console.error("Error fetching messages:", error);
-        return { success: false, error: "Failed to fetch messages" };
+        console.error("Error al obtener mensajes:", error);
+        return { success: false, error: "Error al obtener mensajes" };
     }
 }
 
@@ -142,8 +142,8 @@ export async function sendMessage(conversationId: string, content: string) {
         revalidatePath("/chat");
         return { success: true, data: message };
     } catch (error) {
-        console.error("Error sending message:", error);
-        return { success: false, error: "Failed to send message" };
+        console.error("Error al enviar mensaje:", error);
+        return { success: false, error: "Error al enviar mensaje" };
     }
 }
 
@@ -208,8 +208,8 @@ export async function createConversation(participantId: string) {
         revalidatePath("/chat");
         return { success: true, data: formattedConversation };
     } catch (error) {
-        console.error("Error creating conversation:", error);
-        return { success: false, error: "Failed to create conversation" };
+        console.error("Error al crear conversación:", error);
+        return { success: false, error: "Error al crear conversación" };
     }
 }
 
@@ -238,8 +238,8 @@ export async function clearChat(conversationId: string) {
         revalidatePath("/chat");
         return { success: true };
     } catch (error) {
-        console.error("Error clearing chat:", error);
-        return { success: false, error: "Failed to clear chat" };
+        console.error("Error al limpiar chat:", error);
+        return { success: false, error: "Error al limpiar chat" };
     }
 }
 
@@ -326,7 +326,7 @@ export async function getAvailableUsers() {
                         }
                     },
                     {
-                        enrollments: { // Estudiantes en mis cursos (Compañeros)
+                        enrollments: { // Estudiantes en mis cursos
                             some: { courseId: { in: courseIds } }
                         }
                     }
@@ -348,7 +348,7 @@ export async function getAvailableUsers() {
 
         return { success: true, data: users };
     } catch (error) {
-        console.error("Error fetching available users:", error);
-        return { success: false, error: "Failed to fetch users" };
+        console.error("Error al obtener usuarios disponibles:", error);
+        return { success: false, error: "Error al obtener usuarios disponibles" };
     }
 }

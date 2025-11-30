@@ -8,7 +8,7 @@ import { revalidatePath } from "next/cache";
 async function checkAdmin() {
     const session = await getServerSession(authOptions);
     if (!session || session.user.role !== "ADMIN") {
-        throw new Error("Unauthorized: Admin access required");
+        throw new Error("No autorizado: Acceso requerido");
     }
     return session;
 }
@@ -27,7 +27,7 @@ export async function getCourseEnrollments(courseId: string) {
         });
         return { success: true, data: enrollments };
     } catch (error) {
-        return { success: false, error: "Failed to fetch enrollments" };
+        return { success: false, error: "Error al obtener inscripciones" };
     }
 }
 
@@ -46,7 +46,7 @@ export async function getStudentsNotEnrolled(courseId: string) {
         });
         return { success: true, data: students };
     } catch (error) {
-        return { success: false, error: "Failed to fetch students" };
+        return { success: false, error: "Error al obtener estudiantes" };
     }
 }
 
@@ -62,7 +62,7 @@ export async function enrollStudent(courseId: string, userId: string) {
         revalidatePath(`/admin/courses/${courseId}/enrollments`);
         return { success: true };
     } catch (error) {
-        return { success: false, error: "Failed to enroll student" };
+        return { success: false, error: "Error al inscribir estudiante" };
     }
 }
 
@@ -75,6 +75,6 @@ export async function unenrollStudent(enrollmentId: string, courseId: string) {
         revalidatePath(`/admin/courses/${courseId}/enrollments`);
         return { success: true };
     } catch (error) {
-        return { success: false, error: "Failed to unenroll student" };
+        return { success: false, error: "Error al desinscribir estudiante" };
     }
 }

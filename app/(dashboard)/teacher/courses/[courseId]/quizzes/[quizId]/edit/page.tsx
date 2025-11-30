@@ -13,21 +13,21 @@ export default function EditQuizPage({ params }: { params: Promise<{ courseId: s
     const [quizId, setQuizId] = useState("");
     const [quizTitle, setQuizTitle] = useState("");
 
-    // Quiz Settings State
+    // Estado de configuración del cuestionario
     const [opensAt, setOpensAt] = useState("");
     const [closesAt, setClosesAt] = useState("");
     const [isSaving, setIsSaving] = useState(false);
 
-    // Questions State (Local)
+    // Estado de las preguntas (Local)
     const [questions, setQuestions] = useState<any[]>([]);
 
-    // New Question Form State
+    // Estado del formulario de nueva pregunta
     const [questionText, setQuestionText] = useState("");
     const [options, setOptions] = useState(["", ""]);
     const [correctOption, setCorrectOption] = useState(0);
     const [points, setPoints] = useState(1);
 
-    // Modal states
+    // Estados de los modales
     const [errorMessage, setErrorMessage] = useState<string | null>(null);
     const [deleteQuestionIndex, setDeleteQuestionIndex] = useState<number | null>(null);
 
@@ -46,8 +46,8 @@ export default function EditQuizPage({ params }: { params: Promise<{ courseId: s
         if (response.success && response.data) {
             setQuizTitle(response.data.title);
 
-            // Helper to format date for datetime-local input (YYYY-MM-DDTHH:mm)
-            // adjusting for local timezone
+            // Helper para formatear fecha para entrada datetime-local (YYYY-MM-DDTHH:mm)
+            // ajustando para el huso horario local
             const formatDateForInput = (dateString: Date) => {
                 const date = new Date(dateString);
                 const offset = date.getTimezoneOffset();
@@ -71,7 +71,7 @@ export default function EditQuizPage({ params }: { params: Promise<{ courseId: s
                 opensAt: opensAt ? new Date(opensAt) : null,
                 closesAt: closesAt ? new Date(closesAt) : null,
                 questions: questions.map(q => ({
-                    id: q.id, // Pass ID if it exists (for update), undefined for new
+                    id: q.id, // Pasar ID si existe (para actualizar), undefined para nuevo
                     question: q.question,
                     options: q.options,
                     correctOption: q.correctOption,
@@ -122,7 +122,7 @@ export default function EditQuizPage({ params }: { params: Promise<{ courseId: s
         }
 
         const newQuestion = {
-            // No ID for new questions yet
+            // Sin ID para nuevas preguntas aún
             question: questionText,
             options: [...options],
             correctOption: correctOption,
@@ -131,7 +131,7 @@ export default function EditQuizPage({ params }: { params: Promise<{ courseId: s
 
         setQuestions([...questions, newQuestion]);
 
-        // Reset form
+        // Resetear el formulario
         setQuestionText("");
         setOptions(["", ""]);
         setCorrectOption(0);
@@ -181,7 +181,7 @@ export default function EditQuizPage({ params }: { params: Promise<{ courseId: s
                         </div>
                     </div>
 
-                    {/* Scheduling Settings */}
+                    {/* Configuración de programación */}
                     <div className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-6 bg-white/50 p-6 rounded-xl border border-purple-100">
                         <div>
                             <label className="block text-sm font-bold text-gray-700 mb-2 flex items-center gap-2">
@@ -211,7 +211,7 @@ export default function EditQuizPage({ params }: { params: Promise<{ courseId: s
                 </div>
 
                 <div className="p-8">
-                    {/* Add Question Form */}
+                    {/* Formulario de nueva pregunta */}
                     <div className="bg-gray-50 rounded-xl p-6 border border-gray-200 mb-10">
                         <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
                             <Plus className="w-5 h-5 text-purple-600" /> Nueva Pregunta
@@ -294,7 +294,7 @@ export default function EditQuizPage({ params }: { params: Promise<{ courseId: s
                         </form>
                     </div>
 
-                    {/* Questions List */}
+                    {/* Lista de preguntas */}
                     <div className="space-y-6">
                         <h3 className="text-lg font-bold text-gray-900 border-b border-gray-100 pb-4">
                             Preguntas ({questions.length})
@@ -346,7 +346,7 @@ export default function EditQuizPage({ params }: { params: Promise<{ courseId: s
                 </div>
             </div>
 
-            {/* Delete Confirmation Modal */}
+            {/* Modal de confirmación de eliminación */}
             <Modal
                 isOpen={deleteQuestionIndex !== null}
                 onClose={() => setDeleteQuestionIndex(null)}

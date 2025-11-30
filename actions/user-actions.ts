@@ -11,7 +11,7 @@ import bcrypt from "bcryptjs";
 async function checkAdmin() {
     const session = await getServerSession(authOptions);
     if (!session || session.user.role !== "ADMIN") {
-        throw new Error("Unauthorized: Admin access required");
+        throw new Error("No autorizado: Acceso denegado");
     }
     return session;
 }
@@ -31,7 +31,7 @@ export async function getUsers() {
         });
         return { success: true, data: users };
     } catch (error) {
-        return { success: false, error: "Failed to fetch users" };
+        return { success: false, error: "Error al obtener usuarios" };
     }
 }
 
@@ -44,14 +44,14 @@ export async function createUser(prevState: any, formData: FormData) {
     const role = formData.get("role") as Role;
 
     if (!name || !email || !password || !role) {
-        return { success: false, error: "Missing required fields" };
+        return { success: false, error: "Faltan campos obligatorios" };
     }
 
     try {
         // Verificar si el usuario existe
         const existingUser = await prisma.user.findUnique({ where: { email } });
         if (existingUser) {
-            return { success: false, error: "User already exists" };
+            return { success: false, error: "El usuario ya existe" };
         }
 
         const hashedPassword = await bcrypt.hash(password, 10);
@@ -68,7 +68,7 @@ export async function createUser(prevState: any, formData: FormData) {
         revalidatePath("/admin/users");
         return { success: true, timestamp: Date.now() + Math.random() };
     } catch (error) {
-        return { success: false, error: "Failed to create user", timestamp: Date.now() + Math.random() };
+        return { success: false, error: "Error al crear usuario", timestamp: Date.now() + Math.random() };
     }
 }
 
@@ -82,7 +82,7 @@ export async function updateUserRole(userId: string, newRole: Role) {
         revalidatePath("/admin/users");
         return { success: true, timestamp: Date.now() + Math.random() };
     } catch (error) {
-        return { success: false, error: "Failed to update user role", timestamp: Date.now() + Math.random() };
+        return { success: false, error: "Error al actualizar el rol del usuario", timestamp: Date.now() + Math.random() };
     }
 }
 
@@ -95,7 +95,7 @@ export async function deleteUser(userId: string) {
         });
 
         if (userToDelete?.email === "admin@aulavirtual.com") {
-            return { success: false, error: "Cannot delete the Super Admin", timestamp: Date.now() + Math.random() };
+            return { success: false, error: "No se puede eliminar el Super Admin", timestamp: Date.now() + Math.random() };
         }
 
         await prisma.user.delete({
@@ -104,7 +104,7 @@ export async function deleteUser(userId: string) {
         revalidatePath("/admin/users");
         return { success: true, timestamp: Date.now() + Math.random() };
     } catch (error) {
-        return { success: false, error: "Failed to delete user", timestamp: Date.now() + Math.random() };
+        return { success: false, error: "Error al eliminar el usuario", timestamp: Date.now() + Math.random() };
     }
 }
 
@@ -118,7 +118,7 @@ export async function getTeachers() {
         });
         return { success: true, data: teachers };
     } catch (error) {
-        return { success: false, error: "Failed to fetch teachers" };
+        return { success: false, error: "Error al obtener los profesores" };
     }
 }
 export async function updateUser(prevState: any, formData: FormData) {
@@ -131,7 +131,7 @@ export async function updateUser(prevState: any, formData: FormData) {
     const password = formData.get("password") as string;
 
     if (!userId || !name || !email || !role) {
-        return { success: false, error: "Missing required fields", timestamp: Date.now() + Math.random() };
+        return { success: false, error: "Faltan campos obligatorios", timestamp: Date.now() + Math.random() };
     }
 
     try {
@@ -153,6 +153,6 @@ export async function updateUser(prevState: any, formData: FormData) {
         revalidatePath("/admin/users");
         return { success: true, timestamp: Date.now() + Math.random() };
     } catch (error) {
-        return { success: false, error: "Failed to update user", timestamp: Date.now() + Math.random() };
+        return { success: false, error: "Error al actualizar el usuario", timestamp: Date.now() + Math.random() };
     }
 }

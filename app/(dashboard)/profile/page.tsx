@@ -29,7 +29,7 @@ export default async function ProfilePage() {
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                {/* Personal Information Section */}
+                {/* Información Personal */}
                 <div className="bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden">
                     <div className="p-6 border-b border-gray-100 bg-gray-50/50 flex items-center gap-3">
                         <div className="bg-blue-100 p-2 rounded-xl text-blue-600">
@@ -45,7 +45,7 @@ export default async function ProfilePage() {
                     </div>
                 </div>
 
-                {/* Security Section */}
+                {/* Seguridad */}
                 <div className="bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden">
                     <div className="p-6 border-b border-gray-100 bg-gray-50/50 flex items-center gap-3">
                         <div className="bg-purple-100 p-2 rounded-xl text-purple-600">

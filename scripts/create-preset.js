@@ -1,7 +1,7 @@
 require('dotenv').config();
 const cloudinary = require('cloudinary').v2;
 
-// Configure Cloudinary
+// Configurar Cloudinary
 cloudinary.config({
     cloud_name: process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME,
     api_key: process.env.NEXT_PUBLIC_CLOUDINARY_API_KEY,
@@ -17,8 +17,8 @@ async function createPreset() {
             unsigned: true,
             folder: 'aula_virtual_profiles',
             transformation: [
-                { quality: 'auto', fetch_format: 'auto' }, // Auto compression and format
-                { width: 500, height: 500, crop: 'limit' } // Limit max size
+                { quality: 'auto', fetch_format: 'auto' }, // Auto compresión y formato
+                { width: 500, height: 500, crop: 'limit' } // Limitar tamaño máximo
             ]
         });
 

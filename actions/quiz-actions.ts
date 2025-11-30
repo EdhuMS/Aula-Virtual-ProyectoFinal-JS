@@ -8,7 +8,7 @@ import { revalidatePath } from "next/cache";
 async function checkTeacher() {
     const session = await getServerSession(authOptions);
     if (!session || session.user.role !== "TEACHER") {
-        throw new Error("Unauthorized");
+        throw new Error("No autorizado");
     }
     return session;
 }
@@ -25,8 +25,8 @@ export async function createQuiz(moduleId: string, title: string, courseId: stri
         revalidatePath(`/teacher/courses/${courseId}`);
         return { success: true, data: quiz };
     } catch (error) {
-        console.error("Error creating quiz:", error);
-        return { success: false, error: "Failed to create quiz" };
+        console.error("Error al crear cuestionario:", error);
+        return { success: false, error: "Error al crear cuestionario" };
     }
 }
 
@@ -50,7 +50,7 @@ export async function updateQuiz(
     try {
         // Transacción para manejar actualizaciones
         await prisma.$transaction(async (tx) => {
-            // 1. Actualizar detalles del cuestionario
+            // Actualizar detalles del cuestionario
             await tx.quiz.update({
                 where: { id: quizId },
                 data: {
@@ -60,7 +60,7 @@ export async function updateQuiz(
                 }
             });
 
-            // 2. Manejar preguntas si se proporcionan
+            // Manejar preguntas si se proporcionan
             if (data.questions) {
                 // Obtener IDs de preguntas existentes
                 const existingQuestions = await tx.quizQuestion.findMany({
@@ -108,8 +108,8 @@ export async function updateQuiz(
         revalidatePath(`/teacher/courses/${courseId}`);
         return { success: true };
     } catch (error: any) {
-        console.error("Error updating quiz:", error);
-        return { success: false, error: error.message || "Failed to update quiz" };
+        console.error("Error al actualizar cuestionario:", error);
+        return { success: false, error: error.message || "Error al actualizar cuestionario" };
     }
 }
 
@@ -122,7 +122,7 @@ export async function deleteQuiz(quizId: string, courseId: string) {
         revalidatePath(`/teacher/courses/${courseId}`);
         return { success: true };
     } catch (error) {
-        return { success: false, error: "Failed to delete quiz" };
+        return { success: false, error: "Error al eliminar cuestionario" };
     }
 }
 
@@ -137,7 +137,7 @@ export async function getQuiz(quizId: string) {
         });
         return { success: true, data: quiz };
     } catch (error) {
-        return { success: false, error: "Failed to fetch quiz" };
+        return { success: false, error: "Error al obtener cuestionario" };
     }
 }
 
@@ -156,8 +156,8 @@ export async function addQuestion(quizId: string, question: string, options: str
         revalidatePath(`/teacher/courses/[courseId]/quizzes/${quizId}`); // Necesitaremos manejar la revalidación de ruta correctamente
         return { success: true };
     } catch (error) {
-        console.error("Error adding question:", error);
-        return { success: false, error: "Failed to add question" };
+        console.error("Error al añadir pregunta:", error);
+        return { success: false, error: "Error al añadir pregunta" };
     }
 }
 
@@ -170,7 +170,7 @@ export async function deleteQuestion(questionId: string, quizId: string) {
         // Podríamos necesitar pasar el courseId para revalidar correctamente o simplemente confiar en la actualización del cliente
         return { success: true };
     } catch (error) {
-        return { success: false, error: "Failed to delete question" };
+        return { success: false, error: "Error al eliminar pregunta" };
     }
 }
 
@@ -181,11 +181,11 @@ export async function submitQuizAttempt(
 ) {
     const session = await getServerSession(authOptions);
     if (!session || !session.user.id) {
-        throw new Error("Unauthorized");
+        throw new Error("No autorizado");
     }
 
     try {
-        // 0. Verificar si el intento ya existe
+        // Verificar si el intento ya existe
         const existingAttempt = await prisma.quizAttempt.findFirst({
             where: {
                 quizId,
@@ -197,20 +197,20 @@ export async function submitQuizAttempt(
             return { success: false, error: "Ya has realizado este cuestionario." };
         }
 
-        // 1. Obtener cuestionario con preguntas para calcular puntaje
+        // Obtener cuestionario con preguntas para calcular puntaje
         const quiz = await prisma.quiz.findUnique({
             where: { id: quizId },
             include: { questions: true }
         });
 
-        if (!quiz) throw new Error("Quiz not found");
+        if (!quiz) throw new Error("Cuestionario no encontrado");
 
         // Verificar si el cuestionario está cerrado
         if (quiz.closesAt && new Date() > quiz.closesAt) {
             return { success: false, error: "El cuestionario ha cerrado." };
         }
 
-        // 2. Calcular puntaje
+        // Calcular puntaje
         let earnedPoints = 0;
         let totalPoints = 0;
 
@@ -227,7 +227,7 @@ export async function submitQuizAttempt(
         const finalScore = totalPoints > 0 ? (earnedPoints / totalPoints) * 20 : 0;
         const roundedScore = Math.round(finalScore * 10) / 10; // Redondear a 1 decimal
 
-        // 3. Guardar intento
+        // Guardar intento
         const attempt = await prisma.quizAttempt.create({
             data: {
                 quizId,
@@ -241,15 +241,15 @@ export async function submitQuizAttempt(
         return { success: true, data: attempt };
 
     } catch (error) {
-        console.error("Error submitting quiz:", error);
-        return { success: false, error: "Failed to submit quiz" };
+        console.error("Error al enviar cuestionario:", error);
+        return { success: false, error: "Error al enviar cuestionario" };
     }
 }
 
 export async function getQuizForStudent(quizId: string, courseId: string) {
     const session = await getServerSession(authOptions);
     if (!session || !session.user) {
-        return { success: false, error: "Unauthorized" };
+        return { success: false, error: "No autorizado" };
     }
 
     try {
@@ -310,13 +310,18 @@ export async function getQuizForStudent(quizId: string, courseId: string) {
             }
         });
 
+        const { getModuleNavigation } = await import("./module-actions");
+        const { nextItem, prevItem } = await getModuleNavigation(courseId, quizId, 'quiz');
+
         return {
             success: true,
             data: {
                 ...quiz,
                 questions,
                 attempt, // Retornar el intento para que el frontend conozca el estado
-                isClosed
+                isClosed,
+                nextItem,
+                prevItem
             }
         };
     } catch (error) {
@@ -328,7 +333,7 @@ export async function getQuizForStudent(quizId: string, courseId: string) {
 export async function getQuizResults(quizId: string) {
     await checkTeacher();
     try {
-        // 1. Obtener cuestionario con módulo (para obtener CourseId) e intentos
+        // Obtener cuestionario con módulo (para obtener CourseId) e intentos
         const quiz = await prisma.quiz.findUnique({
             where: { id: quizId },
             include: {
@@ -349,9 +354,9 @@ export async function getQuizResults(quizId: string) {
             }
         });
 
-        if (!quiz) return { success: false, error: "Quiz not found" };
+        if (!quiz) return { success: false, error: "Cuestionario no encontrado" };
 
-        // 2. Obtener todos los estudiantes inscritos en el curso
+        // Obtener todos los estudiantes inscritos en el curso
         const enrollments = await prisma.enrollment.findMany({
             where: { courseId: quiz.module.courseId },
             include: {
@@ -365,7 +370,7 @@ export async function getQuizResults(quizId: string) {
             }
         });
 
-        // 3. Fusionar datos
+        // Fusionar datos
         const results = enrollments.map(enrollment => {
             const student = enrollment.user;
             const attempt = quiz.attempts.find(a => a.studentId === student.id);
@@ -394,7 +399,7 @@ export async function getQuizResults(quizId: string) {
 
         return { success: true, data: { quizTitle: quiz.title, results } };
     } catch (error) {
-        console.error("Error fetching quiz results:", error);
-        return { success: false, error: "Failed to fetch results" };
+        console.error("Error al obtener resultados del cuestionario:", error);
+        return { success: false, error: "Error al obtener resultados del cuestionario" };
     }
 }

@@ -1,13 +1,13 @@
-// Utility to force download of Cloudinary assets
+// Utilidad para forzar la descarga de activos de Cloudinary
 export function getDownloadUrl(url: string) {
     if (!url) return url;
-    // If it's a cloudinary URL
+    // Si es una URL de Cloudinary
     if (url.includes("cloudinary.com")) {
-        // If it already has fl_attachment, return it
+        // Si ya tiene fl_attachment, devolverla
         if (url.includes("fl_attachment")) return url;
 
-        // Insert fl_attachment after /upload/
-        // This works for both /image/upload/ and /raw/upload/
+        // Insertar fl_attachment después de /upload/
+        // Esto funciona para ambos /image/upload/ y /raw/upload/
         return url.replace("/upload/", "/upload/fl_attachment/");
     }
     return url;

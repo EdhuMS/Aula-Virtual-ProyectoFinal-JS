@@ -47,7 +47,7 @@ e:/UTP/CICLO 6/JavaScript Avanzado/Aula Virtual/
 │   ├── (auth)/             # Grupo de rutas públicas (sin layout de dashboard)
 │   ├── (dashboard)/        # Grupo de rutas protegidas (con Sidebar/Navbar)
 │   │   ├── admin/          # Vistas exclusivas de Administrador
-│   │   ├── teacher/        # Vistas exclusivas de Profesor
+│   │   ├── teacher/        # Vistas exclusivas de Profesor (incluye ruta de previsualización)
 │   │   ├── student/        # Vistas exclusivas de Estudiante
 │   │   ├── chat/           # Funcionalidad transversal
 │   │   └── profile/        # Gestión de perfil usuario
@@ -55,6 +55,7 @@ e:/UTP/CICLO 6/JavaScript Avanzado/Aula Virtual/
 │
 ├── components/             # Componentes de UI
 │   ├── ui/                 # Componentes base (Botones, Modales, Inputs, SearchableSelect) - Design System
+│   ├── lesson-view.tsx     # Componente reutilizable para visualización de lecciones (Estudiante/Profesor)
 │   ├── student/            # Componentes específicos de vista estudiante
 │   ├── teacher/            # Componentes específicos de vista profesor
 │   └── ...
