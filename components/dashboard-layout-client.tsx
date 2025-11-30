@@ -176,7 +176,7 @@ export default function DashboardLayoutClient({
                         </>
                     )}
 
-                    {(role === "TEACHER" || role === "STUDENT") && (
+                    {(role === "TEACHER" || role === "STUDENT" || role === "ADMIN") && (
                         <Link
                             href="/profile"
                             onClick={() => setIsSidebarOpen(false)}
