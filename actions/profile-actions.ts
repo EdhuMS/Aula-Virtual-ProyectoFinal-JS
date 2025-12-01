@@ -29,7 +29,8 @@ export async function updateProfile(prevState: any, formData: FormData) {
         });
 
         revalidatePath("/profile");
-        return { success: true, message: "Perfil actualizado correctamente", name, image };
+        revalidatePath("/profile");
+        return { success: true, message: "Perfil actualizado correctamente", name, image, timestamp: Date.now() };
     } catch (error) {
         console.error("Error al actualizar perfil:", error);
         return { success: false, error: "Error al actualizar el perfil" };
@@ -83,7 +84,8 @@ export async function changePassword(prevState: any, formData: FormData) {
         });
 
         revalidatePath("/profile");
-        return { success: true, message: "Contraseña actualizada correctamente" };
+        revalidatePath("/profile");
+        return { success: true, message: "Contraseña actualizada correctamente", timestamp: Date.now() };
     } catch (error) {
         console.error("Error al cambiar contraseña:", error);
         return { success: false, error: "Error al cambiar la contraseña" };

@@ -81,7 +81,7 @@ export async function createCourse(prevState: any, formData: FormData) {
         });
 
         revalidatePath("/admin/courses");
-        return { success: true };
+        return { success: true, timestamp: Date.now() };
     } catch (error: any) {
         console.error("Error al crear curso:", error);
         if (error.code === 'P2002' && error.meta?.target?.includes('code')) {

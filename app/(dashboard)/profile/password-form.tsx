@@ -1,7 +1,7 @@
 "use client";
 
 import { changePassword } from "@/actions/profile-actions";
-import { useActionState, useState } from "react";
+import { useActionState, useState, useRef, useEffect } from "react";
 import { Lock, Loader2, Save, Eye, EyeOff } from "lucide-react";
 
 export default function PasswordForm() {
@@ -9,6 +9,14 @@ export default function PasswordForm() {
     const [showCurrentPassword, setShowCurrentPassword] = useState(false);
     const [showNewPassword, setShowNewPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+    const lastHandledTimestamp = useRef<number>(0);
+
+    useEffect(() => {
+        if (state?.success && state.timestamp && state.timestamp !== lastHandledTimestamp.current) {
+            lastHandledTimestamp.current = state.timestamp;
+            // Opcional: Limpiar campos o mostrar notificación extra
+        }
+    }, [state]);
 
     return (
         <form action={action} className="space-y-6">

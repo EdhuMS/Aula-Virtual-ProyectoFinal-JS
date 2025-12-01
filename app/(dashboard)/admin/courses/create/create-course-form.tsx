@@ -2,7 +2,7 @@
 
 import { createCourse } from "@/actions/course-actions";
 import Link from "next/link";
-import { useActionState, useEffect } from "react";
+import { useActionState, useEffect, useRef } from "react";
 import { Loader2, ArrowLeft, BookOpen, FileText, User } from "lucide-react";
 import { useFormStatus } from "react-dom";
 import { useRouter } from "next/navigation";
@@ -36,11 +36,14 @@ export default function CreateCourseForm({ teachers }: { teachers: any[] }) {
     const [state, formAction] = useActionState(createCourse, initialState);
     const router = useRouter();
 
+    const lastHandledTimestamp = useRef<number>(0);
+
     useEffect(() => {
-        if (state.success) {
+        if (state.success && state.timestamp && state.timestamp !== lastHandledTimestamp.current) {
+            lastHandledTimestamp.current = state.timestamp;
             router.push("/admin/courses");
         }
-    }, [state.success, router]);
+    }, [state, router]);
 
     return (
         <div className="max-w-2xl mx-auto">

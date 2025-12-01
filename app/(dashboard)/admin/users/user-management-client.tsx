@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useActionState, useEffect } from "react";
+import { useState, useActionState, useEffect, useRef } from "react";
 import { createUser, deleteUser, updateUser } from "@/actions/user-actions";
 import { User as UserIcon, Search, Filter, Trash2, Plus, Mail, Lock, Shield, Pencil, Eye, EyeOff, AlertTriangle, CheckCircle } from "lucide-react";
 import { Modal } from "@/components/ui/modal";
@@ -37,6 +37,9 @@ export default function UserManagementClient({ initialUsers }: { initialUsers: U
     const [createState, createFormAction] = useActionState(createUser, initialState);
     const [updateState, updateFormAction] = useActionState(updateUser, initialState);
 
+    // Ref para rastrear la última acción manejada y evitar bucles infinitos
+    const lastHandledTimestamp = useRef<number>(0);
+
     // Manejador directo para eliminar usuario
     const handleDeleteUser = async (formData: FormData) => {
         const userId = formData.get("userId") as string;
@@ -64,8 +67,10 @@ export default function UserManagementClient({ initialUsers }: { initialUsers: U
     }, [initialUsers]);
 
     // Manejar Éxito de Actualización
+    // Manejar Éxito de Actualización
     useEffect(() => {
-        if (updateState.success) {
+        if (updateState.success && updateState.timestamp && updateState.timestamp !== lastHandledTimestamp.current) {
+            lastHandledTimestamp.current = updateState.timestamp;
             setEditingUser(null);
             setSuccessMessage("Usuario actualizado correctamente");
             router.refresh();
@@ -73,8 +78,10 @@ export default function UserManagementClient({ initialUsers }: { initialUsers: U
     }, [updateState, router]);
 
     // Manejar Éxito de Creación
+    // Manejar Éxito de Creación
     useEffect(() => {
-        if (createState.success) {
+        if (createState.success && createState.timestamp && createState.timestamp !== lastHandledTimestamp.current) {
+            lastHandledTimestamp.current = createState.timestamp;
             setSuccessMessage("Usuario creado correctamente");
             router.refresh();
         }

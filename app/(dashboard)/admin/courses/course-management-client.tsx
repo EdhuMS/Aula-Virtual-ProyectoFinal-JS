@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useActionState, useEffect } from "react";
+import { useState, useActionState, useEffect, useRef } from "react";
 import { deleteCourse, updateCourse } from "@/actions/course-actions";
 import NextLink from "next/link";
 import { useRouter } from "next/navigation";
@@ -56,6 +56,7 @@ export default function CourseManagementClient({ initialCourses, teachers }: { i
 
     const [updateState, setUpdateState] = useState<State>(initialState);
     const [isUpdating, setIsUpdating] = useState(false);
+    const lastHandledTimestamp = useRef<number>(0);
 
     // Manejador directo para eliminar curso (Imperativo para mejor control del modal)
     const handleDeleteCourse = async (formData: FormData) => {
@@ -83,7 +84,8 @@ export default function CourseManagementClient({ initialCourses, teachers }: { i
         setUpdateState({ ...result, error: result.error || "" });
         setIsUpdating(false);
 
-        if (result.success) {
+        if (result.success && result.timestamp && result.timestamp !== lastHandledTimestamp.current) {
+            lastHandledTimestamp.current = result.timestamp;
             setEditingCourse(null);
             setSuccessMessage("Curso actualizado correctamente");
         }

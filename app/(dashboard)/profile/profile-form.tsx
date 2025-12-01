@@ -1,7 +1,7 @@
 "use client";
 
 import { updateProfile } from "@/actions/profile-actions";
-import { useActionState, useState, useEffect } from "react";
+import { useActionState, useState, useEffect, useRef } from "react";
 import { User, Mail, Image as ImageIcon, Loader2, Save } from "lucide-react";
 import { CldUploadButton } from "next-cloudinary";
 import Image from "next/image";
@@ -11,9 +11,11 @@ export default function ProfileForm({ user }: { user: any }) {
     const [state, action, isPending] = useActionState(updateProfile, null);
     const [imageUrl, setImageUrl] = useState(user.image || "");
     const { update } = useSession();
+    const lastHandledTimestamp = useRef<number>(0);
 
     useEffect(() => {
-        if (state?.success) {
+        if (state?.success && state.timestamp && state.timestamp !== lastHandledTimestamp.current) {
+            lastHandledTimestamp.current = state.timestamp;
             update({ name: state.name, image: state.image });
         }
     }, [state, update]);
