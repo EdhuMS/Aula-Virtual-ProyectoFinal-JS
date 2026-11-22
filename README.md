@@ -136,7 +136,8 @@ prisma/                     # Esquema de Base de Datos y Seed
 
 ## 📄 Licencia y derechos
 
-**Licenciamiento pendiente de definir.** El código se mantiene visible con fines educativos y de portafolio, pero no existe todavía un archivo `LICENSE` que conceda permisos generales de uso, modificación y redistribución. Antes de adoptar una licencia abierta, se deben comprobar la autoría, posibles colaboradores y recursos de terceros. `"private": true` en `package.json` evita la publicación accidental del paquete en npm; no cambia la visibilidad del repositorio de GitHub.
+El código original de este proyecto se distribuye bajo la **[licencia MIT](LICENSE)**. Puedes utilizarlo, modificarlo y redistribuirlo, incluso comercialmente, conservando el aviso de copyright y la licencia. Las bibliotecas, archivos subidos, imágenes, logotipos y recursos de terceros mantienen sus respectivos derechos. `"private": true` en `package.json` evita la publicación accidental como paquete npm y no cambia la licencia del repositorio.
+
 
 ## ⚠️ Seguridad y alcance
 
