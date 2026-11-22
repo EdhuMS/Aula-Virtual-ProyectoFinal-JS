@@ -25,7 +25,7 @@ Aula Virtual es una plataforma educativa moderna y completa diseñada para facil
 
 ## 🛠️ Stack Tecnológico
 
-Este proyecto utiliza una arquitectura moderna basada en **Next.js 15** (App Router):
+Este proyecto utiliza una arquitectura moderna basada en **Next.js (versión declarada en `package.json`)** (App Router):
 
 - **Frontend**: React, Tailwind CSS 4.0, Lucide React (Iconos).
 - **Backend**: Next.js Server Actions (API-less architecture).
@@ -54,7 +54,7 @@ prisma/                     # Esquema de Base de Datos y Seed
 
 ## 📋 Requisitos Previos
 
-- **Node.js** (v18 o superior)
+- **Node.js** (versión compatible con la versión de Next.js indicada en `package.json`; consulta sus requisitos oficiales)
 - **MySQL** (Base de datos local o remota, e.g., Aiven, PlanetScale)
 - **Cuenta de Cloudinary** (para subida de archivos)
 
@@ -62,8 +62,8 @@ prisma/                     # Esquema de Base de Datos y Seed
 
 1.  **Clonar el repositorio:**
     ```bash
-    git clone https://github.com/tu-usuario/aula-virtual.git
-    cd aula-virtual
+    git clone https://github.com/EdhuMS/Aula-Virtual-ProyectoFinal-JS.git
+    cd Aula-Virtual-ProyectoFinal-JS
     ```
 
 2.  **Instalar dependencias:**
@@ -104,7 +104,7 @@ prisma/                     # Esquema de Base de Datos y Seed
     ```
     Abre [http://localhost:3000](http://localhost:3000) en tu navegador.
 
-## 🔑 Credenciales de Prueba (Seed)
+## 🔑 Credenciales de Prueba (Seed: únicamente entorno local)
 
 | Rol | Email | Contraseña |
 | :--- | :--- | :--- |
@@ -134,6 +134,11 @@ prisma/                     # Esquema de Base de Datos y Seed
 3.  Entra a un curso para ver el contenido, subir tareas o tomar exámenes.
 4.  Usa el Chat para comunicarte con tus compañeros y profesores.
 
-## 📄 Licencia
+## 📄 Licencia y derechos
 
-Este proyecto es de uso educativo y privado.
+**Licenciamiento pendiente de definir.** El código se mantiene visible con fines educativos y de portafolio, pero no existe todavía un archivo `LICENSE` que conceda permisos generales de uso, modificación y redistribución. Antes de adoptar una licencia abierta, se deben comprobar la autoría, posibles colaboradores y recursos de terceros. `"private": true` en `package.json` evita la publicación accidental del paquete en npm; no cambia la visibilidad del repositorio de GitHub.
+
+## ⚠️ Seguridad y alcance
+
+Este proyecto es una demostración educativa: **no utilices en producción las credenciales de prueba** mostradas arriba. Los datos del seed, la inicialización de base de datos y los permisos deben revisarse antes de desplegar. El comando `prisma db push` puede alterar el esquema; haz respaldos antes de utilizarlo con información real. Los secretos de NextAuth, MySQL y Cloudinary deben mantenerse fuera de Git.
+
